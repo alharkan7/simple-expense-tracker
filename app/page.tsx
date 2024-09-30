@@ -7,23 +7,23 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { 
+import {
   CalendarIcon,
-  Utensils, 
+  Utensils,
   ShoppingBag,
   ShoppingBasket,
   Baby,
-  Bus, 
+  Bus,
   Book,
-  Donut, 
-  Tv, 
-  Gift, 
-  Users, 
-  Heart, 
-  CreditCard, 
+  Donut,
+  Tv,
+  Gift,
+  Users,
+  Heart,
+  CreditCard,
   DollarSign,
   FileText,
-  Home, 
+  Home,
   MoreHorizontal,
   ChartArea
 } from 'lucide-react';
@@ -87,103 +87,103 @@ export default function Component() {
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent>
-  <SelectItem value="foodAndBeverages">
-    <div className="flex items-center">
-      <Utensils className="mr-2 h-4 w-4" />
-      <span>Food & Beverages</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="snacks">
-  <div className="flex items-center">
-    <Donut className="mr-2 h-4 w-4" />
-    <span>Snacks</span>
-  </div>
-</SelectItem>
-<SelectItem value="baby">
-    <div className="flex items-center">
-      <Baby className="mr-2 h-4 w-4" />
-      <span>Baby</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="groceries">
-    <div className="flex items-center">
-      <ShoppingBasket className="mr-2 h-4 w-4" />
-      <span>Groceries</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="transportation">
-    <div className="flex items-center">
-      <Bus className="mr-2 h-4 w-4" />
-      <span>Transportation</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="education">
-    <div className="flex items-center">
-      <Book className="mr-2 h-4 w-4" />
-      <span>Education</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="entertainment">
-    <div className="flex items-center">
-      <Tv className="mr-2 h-4 w-4" />
-      <span>Entertainment</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="giftDonations">
-    <div className="flex items-center">
-      <Gift className="mr-2 h-4 w-4" />
-      <span>Gift & Donations</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="family">
-    <div className="flex items-center">
-      <Users className="mr-2 h-4 w-4" />
-      <span>Family</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="health">
-    <div className="flex items-center">
-      <Heart className="mr-2 h-4 w-4" />
-      <span>Health</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="billUtilities">
-    <div className="flex items-center">
-      <FileText className="mr-2 h-4 w-4" />
-      <span>Bill & Utilities</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="feesCharges">
-    <div className="flex items-center">
-      <DollarSign className="mr-2 h-4 w-4" />
-      <span>Fees & Charges</span>
-    </div>
-  </SelectItem>
-  <SelectItem value="shopping">
-  <div className="flex items-center">
-    <ShoppingBag className="mr-2 h-4 w-4" />
-    <span>Shopping</span>
-  </div>
-</SelectItem>
-<SelectItem value="investment">
-  <div className="flex items-center">
-    <ChartArea className="mr-2 h-4 w-4" />
-    <span>Investment</span>
-  </div>
-</SelectItem>
-<SelectItem value="accommodation">
-  <div className="flex items-center">
-    <Home className="mr-2 h-4 w-4" />
-    <span>Accommodation</span>
-  </div>
-</SelectItem>
-<SelectItem value="others">
-  <div className="flex items-center">
-    <MoreHorizontal className="mr-2 h-4 w-4" />
-    <span>Others</span>
-  </div>
-</SelectItem>
-</SelectContent>
+                  <SelectItem value="foodAndBeverages">
+                    <div className="flex items-center">
+                      <Utensils className="mr-2 h-4 w-4" />
+                      <span>Food & Beverages</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="snacks">
+                    <div className="flex items-center">
+                      <Donut className="mr-2 h-4 w-4" />
+                      <span>Snacks</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="baby">
+                    <div className="flex items-center">
+                      <Baby className="mr-2 h-4 w-4" />
+                      <span>Baby</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="groceries">
+                    <div className="flex items-center">
+                      <ShoppingBasket className="mr-2 h-4 w-4" />
+                      <span>Groceries</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="transportation">
+                    <div className="flex items-center">
+                      <Bus className="mr-2 h-4 w-4" />
+                      <span>Transportation</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="education">
+                    <div className="flex items-center">
+                      <Book className="mr-2 h-4 w-4" />
+                      <span>Education</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="entertainment">
+                    <div className="flex items-center">
+                      <Tv className="mr-2 h-4 w-4" />
+                      <span>Entertainment</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="giftDonations">
+                    <div className="flex items-center">
+                      <Gift className="mr-2 h-4 w-4" />
+                      <span>Gift & Donations</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="family">
+                    <div className="flex items-center">
+                      <Users className="mr-2 h-4 w-4" />
+                      <span>Family</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="health">
+                    <div className="flex items-center">
+                      <Heart className="mr-2 h-4 w-4" />
+                      <span>Health</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="billUtilities">
+                    <div className="flex items-center">
+                      <FileText className="mr-2 h-4 w-4" />
+                      <span>Bill & Utilities</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="feesCharges">
+                    <div className="flex items-center">
+                      <DollarSign className="mr-2 h-4 w-4" />
+                      <span>Fees & Charges</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="shopping">
+                    <div className="flex items-center">
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      <span>Shopping</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="investment">
+                    <div className="flex items-center">
+                      <ChartArea className="mr-2 h-4 w-4" />
+                      <span>Investment</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="accommodation">
+                    <div className="flex items-center">
+                      <Home className="mr-2 h-4 w-4" />
+                      <span>Accommodation</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="others">
+                    <div className="flex items-center">
+                      <MoreHorizontal className="mr-2 h-4 w-4" />
+                      <span>Others</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
               </Select>
             </div>
           </div>
