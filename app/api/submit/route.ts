@@ -8,7 +8,7 @@ export async function POST(req: any) {
 
     const auth = new google.auth.GoogleAuth({
       credentials: {
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Replace newline characters
+        private_key: (process.env.GOOGLE_PRIVATE_KEY as string).replace(/\\n/g, '\n'), // Replace newline characters
         client_email: process.env.GOOGLE_CLIENT_EMAIL,
       },      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
