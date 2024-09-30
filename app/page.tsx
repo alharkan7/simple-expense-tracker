@@ -26,17 +26,6 @@ import {
   ChartArea,
   Wallet
 } from 'lucide-react';
-import { appendRow } from '../lib/googleSheets';
-
-const handleFormSubmission = async (event) => {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const values = Object.fromEntries(formData.entries());
-  const submissionData = Object.fromEntries(Object.entries(values).slice(0, -2));
-  const submissionRows = Object.keys(submissionData).map(key => [key, submissionData[key]]);
-  await appendRow(submissionRows);
-};
-
 
 export default function Component() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
