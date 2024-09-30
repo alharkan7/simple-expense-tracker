@@ -88,7 +88,7 @@ export default function Component() {
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
-      }, 2000);
+      }, 3000);
     }
 
     try {
@@ -170,7 +170,7 @@ export default function Component() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="amount">Amount</Label>
-                <Input type="number" id="amount" placeholder="0" step="1000" min="0" inputMode="decimal" required
+                <Input type="number" id="amount" placeholder="0" step="1" min="0" inputMode="decimal" required
                   value={amountValue}
                   onChange={(e) => setAmountValue(e.target.value)} />
               </div>
