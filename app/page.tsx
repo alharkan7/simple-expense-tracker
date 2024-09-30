@@ -188,7 +188,7 @@ export default function Component() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Short Description</Label>
-            <Textarea id="description" placeholder="Enter a brief description" className="h-24" />
+            <Textarea id="description" placeholder="Enter a brief description (optional)" className="h-24" />
           </div>
           <div className="space-y-2">
             <Label>Reimburse</Label>
