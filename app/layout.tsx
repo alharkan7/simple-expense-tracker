@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Head from 'next/head';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   description: "Simple Expense Tracker to Google Sheets",
   icons: [
     {
-      url: "app/wallet.svg",
+      url: "/wallet.svg",
       type: "image/svg+xml", // Type of favicon (ico or png)
     },
   ],
