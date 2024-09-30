@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "Simple Expense Tracker to Google Sheets",
   icons: [
     {
-      url: "/wallet.png"
+      url: "wallet.png"
     },
   ],
 };
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/wallet.png" />
+        <link rel="icon" href="wallet.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
