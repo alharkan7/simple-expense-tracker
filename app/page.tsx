@@ -25,7 +25,8 @@ import {
   FileText,
   Home,
   MoreHorizontal,
-  ChartArea
+  ChartArea,
+  Wallet
 } from 'lucide-react';
 
 
@@ -38,15 +39,16 @@ export default function Component() {
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader className="text-center py-6">
           <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CreditCard className="w-8 h-8 text-white" />
+            <Wallet className="w-8 h-8 text-white" />
           </div>
-          <CardTitle className="text-2xl font-bold">ExpenseTracker</CardTitle>
+          <CardTitle className="text-2xl font-bold">Expense Tracker</CardTitle>
+          <p className="text-sm text-gray-500">Created by <a href="https://x.com/alhrkn" target="_blank" rel="noopener noreferrer">@alhrkn</a></p>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="subject">Subject</Label>
-              <Select>
+              <Select required>
                 <SelectTrigger id="subject">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
@@ -71,18 +73,17 @@ export default function Component() {
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full"
                 />
-                <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
-              <Input type="number" id="amount" placeholder="0.00" step="0.01" min="0" inputMode="decimal" />
+              <Input type="number" id="amount" placeholder="0" step="1000" min="0" inputMode="decimal" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select>
+              <Select required>
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
@@ -204,7 +205,15 @@ export default function Component() {
               </div>
             </RadioGroup>
           </div>
-          <Button className="w-full">Save Expense</Button>
+          <Button className="w-full">Save</Button>
+          <div className="flex justify-between mb-4">
+            <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-sheets", "_blank")}>
+              Sheets
+            </Button>
+            <Button className="w-1/2 ml-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-dashboards", "_blank")}>
+              Dashboard
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
