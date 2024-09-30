@@ -109,7 +109,7 @@ export default function Component() {
     }
   };
 
-  const validateForm = (data: any) => {
+  const validateForm = (data) => {
     const errors = [];
     if (!data.subject) {
       errors.push('Please select a subject');
