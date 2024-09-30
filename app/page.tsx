@@ -72,7 +72,8 @@ export default function Component() {
       subject: subjectValue,
       amount: amountValue,
       category: categoryValue,
-      description: descriptionValue,
+      description: descriptionValue === "" ?
+        categoryValue.substring(2).trim() : descriptionValue,
       reimburse: reimburseValue
     };
 
