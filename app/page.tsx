@@ -289,15 +289,15 @@ export default function Component() {
                 onChange={(e) => setDescriptionValue(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Reimburse</Label>
+              <Label>Reimbursed</Label>
               <RadioGroup defaultValue={reimburseValue} onValueChange={setReimburseValue} className="flex">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="FALSE" id="no" />
-                  <Label htmlFor="no">No</Label>
-                </div>
                 <div className="flex items-center space-x-2 ml-4">
                   <RadioGroupItem value="TRUE" id="yes" />
                   <Label htmlFor="yes">Yes</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="FALSE" id="no" />
+                  <Label htmlFor="no">No</Label>
                 </div>
               </RadioGroup>
             </div>
