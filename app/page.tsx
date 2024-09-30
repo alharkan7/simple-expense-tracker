@@ -20,7 +20,6 @@ import {
   Gift, 
   Users, 
   Heart, 
-  Calendar, 
   CreditCard, 
   DollarSign,
   FileText,
