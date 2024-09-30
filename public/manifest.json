@@ -1,0 +1,14 @@
+{
+    "name": "Expense Tracker",
+    "short_name": "Tracker",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "wallet.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
