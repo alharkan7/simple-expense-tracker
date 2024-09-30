@@ -36,6 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# google sheets api
+# google sheets credentials
 /lib/credentials.json
-/lib/googlesheets.js

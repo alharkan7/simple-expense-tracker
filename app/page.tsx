@@ -26,9 +26,102 @@ import {
   ChartArea,
   Wallet
 } from 'lucide-react';
+import type { Properties } from 'csstype';
+
+// Toast notification styles
+const toastStyles: Properties<string | number, string & {}> = {
+  position: "fixed",
+  bottom: "300px",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  backgroundColor: "#fff",
+  color: "#333",
+  padding: "10px",
+  borderRadius: "10px",
+  zIndex: "1000",
+  transition: "opacity 0.5s ease-in-out",
+};
 
 export default function Component() {
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [subjectValue, setSubjectValue] = useState('');
+  const [amountValue, setAmountValue] = useState('');
+  const [categoryValue, setCategoryValue] = useState('');
+  const [descriptionValue, setDescriptionValue] = useState('');
+  const [reimburseValue, setReimburseValue] = useState('FALSE');
+
+  const timestamp = (() => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
+  })();
+
+  const [feedbackMessage, setFeedbackMessage] = useState(''); // State for feedback message
+  const [showToast, setShowToast] = useState(false); // State to show/hide the toast
+
+  const handleSubmit = async () => {
+    const data = {
+      timestamp,
+      date,
+      subject: subjectValue,
+      amount: amountValue,
+      category: categoryValue,
+      description: descriptionValue,
+      reimburse: reimburseValue
+    };
+
+    const errors = validateForm(data);
+
+    if (errors.length > 0) {
+      console.error('Validation errors:', errors);
+      return;
+    }
+
+    if (errors.length === 0) {
+      setFeedbackMessage("Data is Saved Successfully!");
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+    }
+
+    try {
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        console.log('Data successfully submitted');
+      } else {
+        console.error('Error submitting data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const validateForm = (data: any) => {
+    const errors = [];
+    if (!data.subject) {
+      errors.push('Please select a subject');
+    }
+    if (data.amount <= 0) {
+      errors.push('Amount must be greater than 0');
+    }
+    if (!data.category) {
+      errors.push('Please select a category');
+    }
+    return errors;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-4 flex items-center justify-center">
@@ -40,176 +133,189 @@ export default function Component() {
           <CardTitle className="text-2xl font-bold">Expense Tracker</CardTitle>
           <p className="text-sm text-gray-500">Created by <a href="https://x.com/alhrkn" target="_blank" rel="noopener noreferrer">@alhrkn</a></p>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="subject">Subject</Label>
-              <Select required>
-                <SelectTrigger id="subject">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="al-personal"><b>Al</b> (Personal)</SelectItem>
-                  <SelectItem value="nurin-personal"><b>Nurin</b> (Personal)</SelectItem>
-                  <SelectItem value="al-family"><b>Al</b> (Family)</SelectItem>
-                  <SelectItem value="nurin-family"><b>Nurin</b> (Family)</SelectItem>
-                  <SelectItem value="al-lainnya"><b>Al</b> (Lainnya)</SelectItem>
-                  <SelectItem value="nurin-lainnya"><b>Nurin</b> (Lainnya)</SelectItem>
-                  <SelectItem value="al-nurin"><b>Al & Nurin</b></SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <div className="relative">
-                <Input
-                  type="date"
-                  id="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="w-full"
-                />
+        <CardContent className="space-y-5">
+          <form className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject</Label>
+                <Select required onValueChange={setSubjectValue}>
+                  <SelectTrigger id="subject">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Al (Personal)"><b>Al</b> (Personal)</SelectItem>
+                    <SelectItem value="Nurin (Personal)"><b>Nurin</b> (Personal)</SelectItem>
+                    <SelectItem value="Al (Family)"><b>Al</b> (Family)</SelectItem>
+                    <SelectItem value="Nurin (Family)"><b>Nurin</b> (Family)</SelectItem>
+                    <SelectItem value="Al (Lainnya)"><b>Al</b> (Lainnya)</SelectItem>
+                    <SelectItem value="Nurin (Lainnya)"><b>Nurin</b> (Lainnya)</SelectItem>
+                    <SelectItem value="Al & Nurin"><b>Al & Nurin</b></SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="date">Date</Label>
+                <div className="relative">
+                  <Input
+                    type="date"
+                    id="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="w-full"
+                    required
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="amount">Amount</Label>
-              <Input type="number" id="amount" placeholder="0" step="1000" min="0" inputMode="decimal" required />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Amount</Label>
+                <Input type="number" id="amount" placeholder="0" step="1000" min="0" inputMode="decimal" required
+                  value={amountValue}
+                  onChange={(e) => setAmountValue(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Select required onValueChange={setCategoryValue}>
+                  <SelectTrigger id="category">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="🍔Food & Beverages">
+                      <div className="flex items-center">
+                        <Utensils className="mr-2 h-4 w-4" />
+                        <span>Food & Beverages</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🥫 Snacks">
+                      <div className="flex items-center">
+                        <Donut className="mr-2 h-4 w-4" />
+                        <span>Snacks</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="👼🏼 Baby">
+                      <div className="flex items-center">
+                        <Baby className="mr-2 h-4 w-4" />
+                        <span>Baby</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🛒 Groceries">
+                      <div className="flex items-center">
+                        <ShoppingBasket className="mr-2 h-4 w-4" />
+                        <span>Groceries</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🚗 Transportation">
+                      <div className="flex items-center">
+                        <Bus className="mr-2 h-4 w-4" />
+                        <span>Transportation</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🎓 Education">
+                      <div className="flex items-center">
+                        <Book className="mr-2 h-4 w-4" />
+                        <span>Education</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🍿 Entertainment">
+                      <div className="flex items-center">
+                        <Tv className="mr-2 h-4 w-4" />
+                        <span>Entertainment</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🎁 Gift & Donations">
+                      <div className="flex items-center">
+                        <Gift className="mr-2 h-4 w-4" />
+                        <span>Gift & Donations</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="😊 Family">
+                      <div className="flex items-center">
+                        <Users className="mr-2 h-4 w-4" />
+                        <span>Family</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="💊 Health">
+                      <div className="flex items-center">
+                        <Heart className="mr-2 h-4 w-4" />
+                        <span>Health</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🧾 Bill & Utilities">
+                      <div className="flex items-center">
+                        <FileText className="mr-2 h-4 w-4" />
+                        <span>Bill & Utilities</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="💵 Fees & Charges">
+                      <div className="flex items-center">
+                        <DollarSign className="mr-2 h-4 w-4" />
+                        <span>Fees & Charges</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🛍️ Shopping">
+                      <div className="flex items-center">
+                        <ShoppingBag className="mr-2 h-4 w-4" />
+                        <span>Shopping</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="💰 Investment">
+                      <div className="flex items-center">
+                        <ChartArea className="mr-2 h-4 w-4" />
+                        <span>Investment</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🏠 Accommodation">
+                      <div className="flex items-center">
+                        <Home className="mr-2 h-4 w-4" />
+                        <span>Accommodation</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="🎲 Others">
+                      <div className="flex items-center">
+                        <MoreHorizontal className="mr-2 h-4 w-4" />
+                        <span>Others</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select required>
-                <SelectTrigger id="category">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="foodAndBeverages">
-                    <div className="flex items-center">
-                      <Utensils className="mr-2 h-4 w-4" />
-                      <span>Food & Beverages</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="snacks">
-                    <div className="flex items-center">
-                      <Donut className="mr-2 h-4 w-4" />
-                      <span>Snacks</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="baby">
-                    <div className="flex items-center">
-                      <Baby className="mr-2 h-4 w-4" />
-                      <span>Baby</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="groceries">
-                    <div className="flex items-center">
-                      <ShoppingBasket className="mr-2 h-4 w-4" />
-                      <span>Groceries</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="transportation">
-                    <div className="flex items-center">
-                      <Bus className="mr-2 h-4 w-4" />
-                      <span>Transportation</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="education">
-                    <div className="flex items-center">
-                      <Book className="mr-2 h-4 w-4" />
-                      <span>Education</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="entertainment">
-                    <div className="flex items-center">
-                      <Tv className="mr-2 h-4 w-4" />
-                      <span>Entertainment</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="giftDonations">
-                    <div className="flex items-center">
-                      <Gift className="mr-2 h-4 w-4" />
-                      <span>Gift & Donations</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="family">
-                    <div className="flex items-center">
-                      <Users className="mr-2 h-4 w-4" />
-                      <span>Family</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="health">
-                    <div className="flex items-center">
-                      <Heart className="mr-2 h-4 w-4" />
-                      <span>Health</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="billUtilities">
-                    <div className="flex items-center">
-                      <FileText className="mr-2 h-4 w-4" />
-                      <span>Bill & Utilities</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="feesCharges">
-                    <div className="flex items-center">
-                      <DollarSign className="mr-2 h-4 w-4" />
-                      <span>Fees & Charges</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="shopping">
-                    <div className="flex items-center">
-                      <ShoppingBag className="mr-2 h-4 w-4" />
-                      <span>Shopping</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="investment">
-                    <div className="flex items-center">
-                      <ChartArea className="mr-2 h-4 w-4" />
-                      <span>Investment</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="accommodation">
-                    <div className="flex items-center">
-                      <Home className="mr-2 h-4 w-4" />
-                      <span>Accommodation</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="others">
-                    <div className="flex items-center">
-                      <MoreHorizontal className="mr-2 h-4 w-4" />
-                      <span>Others</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="description">Short Description</Label>
+              <Textarea id="description" placeholder="Enter a brief description (optional)" className="h-24"
+                value={descriptionValue}
+                onChange={(e) => setDescriptionValue(e.target.value)} />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Short Description</Label>
-            <Textarea id="description" placeholder="Enter a brief description (optional)" className="h-24" />
-          </div>
-          <div className="space-y-2">
-            <Label>Reimburse</Label>
-            <RadioGroup defaultValue="no" className="flex">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="no" />
-                <Label htmlFor="no">No</Label>
+            <div className="space-y-2">
+              <Label>Reimburse</Label>
+              <RadioGroup defaultValue={reimburseValue} onValueChange={setReimburseValue} className="flex">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="FALSE" id="no" />
+                  <Label htmlFor="no">No</Label>
+                </div>
+                <div className="flex items-center space-x-2 ml-4">
+                  <RadioGroupItem value="TRUE" id="yes" />
+                  <Label htmlFor="yes">Yes</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <Button className="w-full" onClick={handleSubmit}>Save</Button>
+            {/* Toast notification */}
+            {showToast && (
+              <div style={{ ...toastStyles, opacity: showToast ? 1 : 0 }}>
+                {feedbackMessage}
               </div>
-              <div className="flex items-center space-x-2 ml-4">
-                <RadioGroupItem value="yes" id="yes" />
-                <Label htmlFor="yes">Yes</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          <Button className="w-full">Save</Button>
-          <div className="flex justify-between mb-4">
-            <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-sheets", "_blank")}>
-              Sheets
-            </Button>
-            <Button className="w-1/2 ml-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-dashboards", "_blank")}>
-              Dashboard
-            </Button>
-          </div>
+            )}
+            <div className="flex justify-between mb-4">
+              <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-sheets", "_blank")}>
+                Sheets
+              </Button>
+              <Button className="w-1/2 ml-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-dashboards", "_blank")}>
+                Dashboard
+              </Button>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </div>
