@@ -291,11 +291,11 @@ export default function Component() {
             <div className="space-y-2">
               <Label>Reimbursed</Label>
               <RadioGroup defaultValue={reimburseValue} onValueChange={setReimburseValue} className="flex">
-                <div className="flex items-center space-x-2 ml-4">
+                <div className="flex items-center space-x-2">
                   <RadioGroupItem value="TRUE" id="yes" />
                   <Label htmlFor="yes">Yes</Label>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 ml-4">
                   <RadioGroupItem value="FALSE" id="no" />
                   <Label htmlFor="no">No</Label>
                 </div>
