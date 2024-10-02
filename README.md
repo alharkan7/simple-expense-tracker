@@ -54,7 +54,7 @@ Visit `http://localhost:3000` to see the app in action.
 
 ## Deployment
 
-This app is deployed on Vercel. You can access it [here](https://simple-expense-tracker-blond.vercel.app/).
+This app is deployed on Vercel. You can access it [https://simple-expense-tracker-blond.vercel.app](https://simple-expense-tracker-blond.vercel.app/).
 
 ## Contributing
 
