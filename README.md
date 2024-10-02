@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Simple Expense Tracker
+
+A straightforward web application designed to help users record daily expenses effortlessly. This app allows users to log their expenses and automatically saves them to a Google Sheets document for easy tracking and management.
+
+## Features
+
+- User-friendly interface for recording expenses.
+- Direct integration with Google Sheets for real-time data storage.
+- Easy to use, suitable for anyone looking to track their daily spending.
+
+## Technologies Used
+
+- **React**: For building the user interface.
+- **JavaScript**: For application logic.
+- **Google Sheets API**: For writing data directly to a Google Sheets document.
+- **CSS**: For styling the application.
+- **Vercel**: For deployment.
 
 ## Getting Started
 
-First, run the development server:
+To run this project locally, follow these steps:
+
+**1. Clone the repository:**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/alharkan7/simple-expense-tracker.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**2.  Navigate to the project directory:**
+    
+```bash    
+cd simple-expense-tracker
+```
+**3.  Install the dependencies:**
+    
+```bash
+npm install
+```
+    
+**4.  Set up your Google Sheets API** 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Get the credentials and configure the necessary environment variables as outlined in the `README` or documentation within the project.
+    
+**5.  Start the development server:**
+    
+```bash
+ npm start
+```
+    
+**6.  Open your browser** 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Visit `http://localhost:3000` to see the app in action.
+    
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
+This app is deployed on Vercel. You can access it [here](https://simple-expense-tracker-blond.vercel.app/).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contributions are welcome! If you have suggestions for improvements or features, please feel free to open an issue or submit a pull request.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Acknowledgements
+
+-   [React](https://reactjs.org/) for the powerful framework.
+-   Google Sheets API for seamless data integration.
+-   [Vercel](https://vercel.com/) for easy deployment.
+
+
+## Happy tracking!
+
