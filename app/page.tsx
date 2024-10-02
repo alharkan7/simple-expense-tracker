@@ -97,7 +97,7 @@ export default function Component() {
     }
   };
 
-  const validateForm = (data: Record<string,number>) => {
+  const validateForm = (data: any) => {
     const errors = [];
     if (!data.subject) {
       errors.push('Please select a subject');
