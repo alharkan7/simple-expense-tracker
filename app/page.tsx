@@ -51,6 +51,8 @@ export default function Component() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setFeedbackMessage('Submitting...');
+
     const data = {
       timestamp,
       date,
@@ -66,6 +68,7 @@ export default function Component() {
 
     if (errors.length > 0) {
       console.error('Validation errors:', errors);
+      setFeedbackMessage("Error: " + errors.join(', '))
       return;
     }
 
@@ -79,18 +82,20 @@ export default function Component() {
       });
       if (response.ok) {
         console.log('Data successfully submitted');
-        setFeedbackMessage("Your Data is Saved");
+        setFeedbackMessage("Your Data is Saved!");
+
+        setSubjectValue(''); // Reset subject input
+        setAmountValue('');  // Reset amount input
+        setCategoryValue(''); // Reset category input
+        setDescriptionValue(''); // Reset description input
+        setReimburseValue('FALSE'); // Reset checkbox or boolean fields
+        setDate(new Date().toISOString().split('T')[0]); // Reset date picker
         setTimeout(() => {
           setFeedbackMessage('');
-          setSubjectValue(''); // Reset subject input
-          setAmountValue('');  // Reset amount input
-          setCategoryValue(''); // Reset category input
-          setDescriptionValue(''); // Reset description input
-          setReimburseValue('FALSE'); // Reset checkbox or boolean fields
-          setDate(new Date().toISOString().split('T')[0]); // Reset date picker
         }, 3000); // Clear the message after 5 seconds
       } else {
         console.error('Error submitting data');
+        setFeedbackMessage("Error Submitting Data. Please Try Again.");
       }
     } catch (error) {
       console.error('Error:', error);
