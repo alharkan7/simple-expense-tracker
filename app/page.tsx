@@ -28,20 +28,6 @@ import {
 } from 'lucide-react';
 import type { Properties } from 'csstype';
 
-// Toast notification styles
-const toastStyles: Properties<string | number, string & {}> = {
-  position: "fixed",
-  bottom: "300px",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  backgroundColor: "#fff",
-  color: "#333",
-  padding: "10px",
-  borderRadius: "10px",
-  zIndex: "1000",
-  transition: "opacity 0.5s ease-in-out",
-};
-
 export default function Component() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [subjectValue, setSubjectValue] = useState('');
@@ -63,9 +49,9 @@ export default function Component() {
   })();
 
   const [feedbackMessage, setFeedbackMessage] = useState(''); // State for feedback message
-  const [showToast, setShowToast] = useState(false); // State to show/hide the toast
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     const data = {
       timestamp,
       date,
@@ -84,14 +70,6 @@ export default function Component() {
       return;
     }
 
-    if (errors.length === 0) {
-      setFeedbackMessage("Data is Saved Successfully!");
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-    }
-
     try {
       const response = await fetch('/api/submit', {
         method: 'POST',
@@ -102,6 +80,16 @@ export default function Component() {
       });
       if (response.ok) {
         console.log('Data successfully submitted');
+        setFeedbackMessage("Your Data is Saved");
+        setTimeout(() => {
+          setFeedbackMessage('');
+          setSubjectValue(''); // Reset subject input
+          setAmountValue('');  // Reset amount input
+          setCategoryValue(''); // Reset category input
+          setDescriptionValue(''); // Reset description input
+          setReimburseValue('FALSE'); // Reset checkbox or boolean fields
+          setDate(new Date().toISOString().split('T')[0]); // Reset date picker
+        }, 3000); // Clear the message after 5 seconds
       } else {
         console.error('Error submitting data');
       }
@@ -133,13 +121,16 @@ export default function Component() {
           </div>
           <CardTitle className="text-2xl font-bold">Expense Tracker</CardTitle>
           <p className="text-sm text-gray-500">Created by <a href="https://x.com/alhrkn" target="_blank" rel="noopener noreferrer">@alhrkn</a></p>
+          {feedbackMessage && (
+            <p className="text-blue-600 font-semibold mt-1">{feedbackMessage}</p>
+          )}
         </CardHeader>
         <CardContent className="space-y-5">
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="subject">Subject</Label>
-                <Select required onValueChange={setSubjectValue}>
+                <Select value={subjectValue} required onValueChange={setSubjectValue}>
                   <SelectTrigger id="subject">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
@@ -177,7 +168,7 @@ export default function Component() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <Select required onValueChange={setCategoryValue}>
+                <Select value={categoryValue} required onValueChange={setCategoryValue}>
                   <SelectTrigger id="category">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
@@ -301,13 +292,7 @@ export default function Component() {
                 </div>
               </RadioGroup>
             </div>
-            <Button className="w-full" onClick={handleSubmit}>Save</Button>
-            {/* Toast notification */}
-            {showToast && (
-              <div style={{ ...toastStyles, opacity: showToast ? 1 : 0 }}>
-                {feedbackMessage}
-              </div>
-            )}
+            <Button className="w-full" type="submit">Save</Button>
             <div className="flex justify-between mb-4">
               <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-sheets", "_blank")}>
                 Sheets
