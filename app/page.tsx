@@ -26,7 +26,6 @@ import {
   ChartArea,
   Wallet
 } from 'lucide-react';
-import type { Properties } from 'csstype';
 
 export default function Component() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -98,7 +97,7 @@ export default function Component() {
     }
   };
 
-  const validateForm = (data: any) => {
+  const validateForm = (data: Record<string,number>) => {
     const errors = [];
     if (!data.subject) {
       errors.push('Please select a subject');

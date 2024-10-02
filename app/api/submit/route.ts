@@ -1,7 +1,7 @@
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 
-export async function POST(req: any) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { timestamp, subject, date, amount, category, description, reimburse } = body;
