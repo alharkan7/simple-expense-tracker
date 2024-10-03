@@ -298,10 +298,10 @@ export default function Component() {
             </div>
             <Button className="w-full" type="submit">Save</Button>
             <div className="flex justify-between mb-4">
-              <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-sheets", "_blank")}>
+              <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.location.href="https://bit.ly/adexpense-sheets"}>
                 Sheets
               </Button>
-              <Button className="w-1/2 ml-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.open("https://bit.ly/adexpense-dashboards", "_blank")}>
+              <Button className="w-1/2 ml-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.location.href="https://bit.ly/adexpense-dashboards"}>
                 Dashboard
               </Button>
             </div>
