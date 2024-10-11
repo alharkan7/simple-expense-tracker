@@ -34,6 +34,7 @@ export default function Component() {
   const [categoryValue, setCategoryValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
   const [reimburseValue, setReimburseValue] = useState('FALSE');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const timestamp = (() => {
     const date = new Date();
@@ -50,7 +51,8 @@ export default function Component() {
   const [feedbackMessage, setFeedbackMessage] = useState(''); // State for feedback message
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+    setIsSubmitting(true); // Disable the Save button
     setFeedbackMessage('Submitting...');
 
     const data = {
@@ -68,7 +70,8 @@ export default function Component() {
 
     if (errors.length > 0) {
       console.error('Validation errors:', errors);
-      setFeedbackMessage("Error: " + errors.join(', '))
+      setFeedbackMessage("Error: " + errors.join(', '));
+      setIsSubmitting(false); // Re-enable the button on error  
       return;
     }
 
@@ -99,6 +102,8 @@ export default function Component() {
       }
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false); // Re-enable the button once the request is complete
     }
   };
 
@@ -285,23 +290,25 @@ export default function Component() {
             </div>
             <div className="space-y-2">
               <Label>Reimbursed</Label>
-              <RadioGroup defaultValue={reimburseValue} onValueChange={setReimburseValue} className="flex">
+              <RadioGroup value={reimburseValue} onValueChange={setReimburseValue} className="flex">
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="TRUE" id="yes" />
+                  <RadioGroupItem value="TRUE" id="yes" checked={reimburseValue === 'TRUE'} />
                   <Label htmlFor="yes">Yes</Label>
                 </div>
                 <div className="flex items-center space-x-2 ml-4">
-                  <RadioGroupItem value="FALSE" id="no" />
+                  <RadioGroupItem value="FALSE" id="no" checked={reimburseValue === 'FALSE'} />
                   <Label htmlFor="no">No</Label>
                 </div>
               </RadioGroup>
             </div>
-            <Button className="w-full" type="submit">Save</Button>
+            <Button className="w-full" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Save'}
+            </Button>
             <div className="flex justify-between mb-4">
-              <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.location.href="https://bit.ly/adexpense-sheets"}>
+              <Button className="w-1/2 mr-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.location.href = "https://bit.ly/adexpense-sheets"}>
                 Sheets
               </Button>
-              <Button className="w-1/2 ml-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.location.href="https://bit.ly/adexpense-dashboards"}>
+              <Button className="w-1/2 ml-2 bg-transparent border border-blue-500 hover:bg-blue-500 hover:text-white rounded py-2 text-blue-500" onClick={() => window.location.href = "https://bit.ly/adexpense-dashboards"}>
                 Dashboard
               </Button>
             </div>
