@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import { Button } from "@/components/ui/button"
-import { Bell, Settings as SettingsIcon, Zap, AlertTriangle, RefreshCw, ChevronLeft } from 'lucide-react'
+import { Bell, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { UserMenu } from './components/user-menu'
 import { Chart } from './components/chart'
@@ -18,7 +17,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer"
 import {
   Dialog,
@@ -65,12 +63,15 @@ interface AppError {
   error: string;
 }
 
+// Premium chart palette shared across the app
+const CHART_COLORS = ['#6366f1', '#0ea5e9', '#10b981', '#f59e0b', '#8b5cf6', '#14b8a6', '#f43f5e']
+
 // Mock data for the donut chart (will be replaced with real data)
 const mockChartData = [
-  { name: 'Food', value: 400, color: '#0088FE' },
-  { name: 'Transport', value: 300, color: '#00C49F' },
-  { name: 'Entertainment', value: 200, color: '#FFBB28' },
-  { name: 'Others', value: 100, color: '#FF8042' },
+  { name: 'Food', value: 400, color: '#6366f1' },
+  { name: 'Transport', value: 300, color: '#0ea5e9' },
+  { name: 'Entertainment', value: 200, color: '#f59e0b' },
+  { name: 'Others', value: 100, color: '#8b5cf6' },
 ]
 
 // Cache configuration for PostgreSQL data
@@ -519,7 +520,7 @@ export default function MobileFinanceTracker() {
           }
         }
       })
-      const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658']
+      const colors = CHART_COLORS
       const newChartData = Object.entries(categoryTotals).map(([name, value], index) => ({
         name,
         value,
@@ -592,7 +593,7 @@ export default function MobileFinanceTracker() {
               }
             }
           })
-          const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658']
+          const colors = CHART_COLORS
           const newChartData = Object.entries(categoryTotals).map(([name, value], index) => ({
             name,
             value,
@@ -669,7 +670,7 @@ export default function MobileFinanceTracker() {
           }
         }
       })
-      const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658']
+      const colors = CHART_COLORS
       const newChartData = Object.entries(categoryTotals).map(([name, value], index) => ({
         name,
         value,
@@ -763,7 +764,7 @@ export default function MobileFinanceTracker() {
         }
       })
       
-      const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658']
+      const colors = CHART_COLORS
       const newChartData = Object.entries(categoryTotals).map(([name, value], index) => ({
         name,
         value,
@@ -854,7 +855,7 @@ export default function MobileFinanceTracker() {
                 }
               }
             })
-            const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658']
+            const colors = CHART_COLORS
             const newChartData = Object.entries(categoryTotals).map(([name, value], index) => ({
               name,
               value,
@@ -899,18 +900,32 @@ export default function MobileFinanceTracker() {
   }
 
   return (
-    <div className="w-full relative overflow-hidden" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
-      {/* Full-width background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-600"></div>
+    <div className="w-full relative overflow-hidden bg-[#0a1128]" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+      {/* Hero background - matches login screen */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1128] via-[#0e1b3d] to-[#12275c]"></div>
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+            maskImage: 'radial-gradient(ellipse 110% 60% at 50% 0%, black 30%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 110% 60% at 50% 0%, black 30%, transparent 80%)',
+          }}
+        ></div>
+        <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-blue-500/25 blur-3xl animate-glow-slow"></div>
+        <div className="absolute top-20 -left-24 w-64 h-64 rounded-full bg-indigo-400/15 blur-3xl animate-glow-slower"></div>
+      </div>
 
       {/* Centered content */}
-      <div className="relative z-10 h-full w-full max-w-sm mx-auto flex flex-col">
+      <div className="relative z-10 h-full w-full flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-3 w-full flex-shrink-0">
+        <div className="flex items-start justify-between px-4 py-3 w-full max-w-sm mx-auto flex-shrink-0">
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Bell
-                className="w-5 h-5 text-white cursor-pointer"
+              <button
+                className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center transition-colors hover:bg-white/15"
                 onClick={() => {
                   console.log('Bell clicked, balance:', balance, 'monthlyBudget:', monthlyBudget, 'totalExpenses:', totalExpenses, 'isNaN(balance):', isNaN(balance))
                   if (balance < 0 && !isNaN(balance)) {
@@ -922,13 +937,15 @@ export default function MobileFinanceTracker() {
                     console.log('Balance is NaN, not showing anything')
                   }
                 }}
-              />
+              >
+                <Bell className="w-4 h-4 text-blue-100" />
+              </button>
               {balance < 0 && (
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-white"></div>
+                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#0e1b3d]"></div>
               )}
             </div>
-            <RefreshCw
-              className="w-4 h-4 text-white cursor-pointer hover:text-white/80 transition-colors"
+            <button
+              className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center transition-colors hover:bg-white/15"
               onClick={async () => {
                 try {
                   clearCache()
@@ -946,13 +963,26 @@ export default function MobileFinanceTracker() {
                   toast.error("Failed to refresh data")
                 }
               }}
+            >
+              <RefreshCw className="w-4 h-4 text-blue-100" />
+            </button>
+          </div>
+
+          {/* User menu */}
+          <div className="flex flex-col items-end gap-2">
+            <UserMenu
+              isDemoMode={isDemoMode}
+              onOpenBudget={() => setIsBudgetDrawerOpen(true)}
+              onOpenSettings={() => {
+                setIsDrawerOpen(true)
+                setDrawerKey(prev => prev + 1)
+              }}
             />
           </div>
-          <UserMenu isDemoMode={isDemoMode} />
         </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-white rounded-t-3xl px-4 pt-4 pb-0 w-full overflow-hidden flex flex-col items-center relative">
+      <div className="flex-1 min-h-0 bg-white rounded-3xl px-4 pt-4 pb-0 w-full overflow-hidden flex flex-col items-center relative shadow-[0_18px_60px_rgba(2,8,30,0.4)]">
 
         {/* Chart or Transaction Table Section */}
         <div className="w-full h-full relative overflow-hidden">
@@ -962,7 +992,7 @@ export default function MobileFinanceTracker() {
               showTransactionTable ? 'transform -translate-x-full' : 'transform translate-x-0'
             }`}
           >
-            <div className="w-full flex flex-col items-center overflow-y-auto">
+            <div className="w-full h-full flex flex-col items-center justify-evenly overflow-y-auto">
               <Chart
                 data={chartData}
                 totalIncome={totalIncome}
@@ -1003,7 +1033,7 @@ export default function MobileFinanceTracker() {
               showTransactionTable ? 'transform translate-x-0' : 'transform translate-x-full'
             }`}
           >
-            <div className="w-full flex flex-col items-center overflow-y-auto">
+            <div className="w-full h-full flex flex-col items-center overflow-hidden">
               <TransactionTable
                 expenses={expenses}
                 incomes={incomes}
@@ -1020,55 +1050,39 @@ export default function MobileFinanceTracker() {
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="flex gap-2 p-3 mb-0 bg-white w-full flex-shrink-0 rounded-b-lg">
-        <Button
-          variant="outline"
-          className="rounded-full flex-1 h-8 text-xs border border-gray-300 shadow-none hover:shadow-none hover:translate-x-0 hover:translate-y-0 bg-transparent"
-          onClick={() => setIsBudgetDrawerOpen(true)}
-        >
-          <Zap className="w-3 h-3 mr-1" />
-          Anggaran
-        </Button>
-        <Drawer open={isDrawerOpen} onOpenChange={(open) => {
-          setIsDrawerOpen(open)
-          // Reset drawer key to remount Settings component
-          if (!open) {
-            setDrawerKey(prev => prev + 1)
-          }
-        }}>
-          <DrawerTrigger asChild>
-            <Button variant="outline" className="rounded-full flex-1 h-8 text-xs border border-gray-300 shadow-none hover:shadow-none hover:translate-x-0 hover:translate-y-0 bg-transparent">
-              <SettingsIcon className="w-3 h-3 mr-1" />
-              Pengaturan
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent className="max-h-[80vh] w-full max-w-sm mx-auto flex flex-col">
-            <DrawerHeader className="flex-shrink-0">
-              <DrawerTitle>Settings</DrawerTitle>
-            </DrawerHeader>
-            <div className="flex-1 overflow-hidden">
-              <Settings
-                key={drawerKey}
-                expenseCategories={expenseCategories}
-                incomeCategories={incomeCategories}
-                userEmail={session?.user?.email || ''}
-                loading={loading}
-                onCategoriesUpdated={fetchUserCategories}
-              />
-            </div>
-          </DrawerContent>
-        </Drawer>
-        </div>
+      {/* Settings Drawer */}
+      <Drawer open={isDrawerOpen} onOpenChange={(open) => {
+        setIsDrawerOpen(open)
+        // Reset drawer key to remount Settings component
+        if (!open) {
+          setDrawerKey(prev => prev + 1)
+        }
+      }}>
+        <DrawerContent className="max-h-[80vh] w-full flex flex-col">
+          <DrawerHeader className="flex-shrink-0">
+            <DrawerTitle>Settings</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex-1 overflow-hidden">
+            <Settings
+              key={drawerKey}
+              expenseCategories={expenseCategories}
+              incomeCategories={incomeCategories}
+              userEmail={session?.user?.email || ''}
+              loading={loading}
+              onCategoriesUpdated={fetchUserCategories}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
 
         {/* Footer */}
-        <div className="flex-shrink-0 text-center mb-1">
-          <span className="text-xs text-white/70">
+        <div className="flex-shrink-0 text-center pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <span className="text-xs text-white/55">
             © {new Date().getFullYear()} |
           </span>
           <button
             onClick={() => window.open('mailto:diananurindrasari94@gmail.com')}
-            className="text-xs text-white/70 hover:text-white cursor-pointer transition-colors ml-1"
+            className="text-xs text-white/55 hover:text-white/80 cursor-pointer transition-colors ml-1"
           >
             Tim Peneliti DIPA Polinema
           </button>

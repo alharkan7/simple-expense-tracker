@@ -38,13 +38,36 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              function setVH() {
+              function isFormControlFocused() {
+                const activeElement = document.activeElement;
+                return activeElement && (
+                  activeElement.tagName === 'INPUT' ||
+                  activeElement.tagName === 'TEXTAREA' ||
+                  activeElement.tagName === 'SELECT' ||
+                  activeElement.isContentEditable
+                );
+              }
+
+              function setVH(force) {
+                // On mobile, opening the software keyboard fires a resize event.
+                // Keep the app shell at its original height so the chart and footer
+                // are not compressed into the visible area above the keyboard.
+                if (!force && isFormControlFocused()) return;
+
                 const vh = window.innerHeight * 0.01;
                 document.documentElement.style.setProperty('--vh', vh + 'px');
               }
-              setVH();
-              window.addEventListener('resize', setVH);
-              window.addEventListener('orientationchange', setVH);
+
+              setVH(true);
+              window.addEventListener('resize', function () { setVH(false); });
+              window.addEventListener('orientationchange', function () {
+                window.setTimeout(function () { setVH(true); }, 250);
+              });
+              document.addEventListener('focusout', function () {
+                window.setTimeout(function () {
+                  if (!isFormControlFocused()) setVH(true);
+                }, 250);
+              });
             `,
           }}
         />

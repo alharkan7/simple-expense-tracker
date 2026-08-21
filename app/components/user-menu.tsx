@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession, signIn, signOut } from "next-auth/react"
-import { User, LogOut } from 'lucide-react'
+import { User, LogOut, Zap, Settings } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,9 +13,11 @@ import {
 
 interface UserMenuProps {
   isDemoMode?: boolean
+  onOpenBudget?: () => void
+  onOpenSettings?: () => void
 }
 
-export function UserMenu({ isDemoMode = false }: UserMenuProps) {
+export function UserMenu({ isDemoMode = false, onOpenBudget, onOpenSettings }: UserMenuProps) {
   const { data: session, status } = useSession()
 
   if (status === "loading" && !isDemoMode) {
@@ -52,12 +54,37 @@ export function UserMenu({ isDemoMode = false }: UserMenuProps) {
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64 z-[9999] bg-white border border-gray-200 shadow-lg">
+          <DropdownMenuContent align="end" className="w-64 z-[9999] bg-white border border-gray-200 shadow-lg rounded-2xl">
             {/* User info in dropdown */}
             <div className="px-3 py-2 text-sm border-b border-border">
               <div className="font-medium">{user?.name || 'User'}</div>
               <div className="text-muted-foreground text-xs">{user?.email}</div>
             </div>
+
+            {onOpenBudget && (
+              <DropdownMenuItem
+                onClick={() => onOpenBudget()}
+                className="flex items-center gap-2 cursor-pointer text-sm"
+              >
+                <Zap className="w-4 h-4" />
+                Anggaran
+              </DropdownMenuItem>
+            )}
+
+            {onOpenSettings && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => onOpenSettings()}
+                  className="flex items-center gap-2 cursor-pointer text-sm"
+                >
+                  <Settings className="w-4 h-4" />
+                  Pengaturan
+                </DropdownMenuItem>
+              </>
+            )}
+
+            <DropdownMenuSeparator />
 
             <DropdownMenuItem
               onClick={() => {

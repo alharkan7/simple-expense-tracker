@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, Filter, SortAsc, SortDesc, Calendar, Edit2, Check, X, Loader2, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Filter, SortAsc, SortDesc, Calendar, Edit2, Check, X, Loader2, Trash2, ReceiptText, AlertTriangle } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
@@ -376,27 +376,27 @@ export function TransactionTable({
   }
 
   return (
-    <div className="space-y-4 w-full h-full">
+    <div className="flex h-full min-h-0 w-full flex-col">
       {/* Header with back button and month navigation */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex flex-shrink-0 items-center justify-between">
         {/* Back button */}
         {onBackClick && (
           <Button
             onClick={onBackClick}
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="p-1"
+            className="h-9 w-9 rounded-xl border border-slate-200 bg-white p-0 text-slate-600 shadow-sm hover:bg-slate-50"
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
         )}
 
         {/* Month navigation */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 rounded-xl border border-slate-200/80 bg-slate-50 p-1">
           <button
             onClick={() => onNavigateMonth('prev')}
             disabled={!canNavigatePrev}
-            className={`p-1 rounded-full transition-colors ${
+            className={`rounded-lg p-1.5 transition-colors ${
               canNavigatePrev
                 ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
                 : 'text-gray-300 cursor-not-allowed'
@@ -404,13 +404,13 @@ export function TransactionTable({
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <p className="text-gray-600 text-sm font-medium">
+          <p className="min-w-[112px] text-center text-sm font-semibold tracking-tight text-slate-800">
             {getMonthName(currentMonth)} {currentYear}
           </p>
           <button
             onClick={() => onNavigateMonth('next')}
             disabled={!canNavigateNext}
-            className={`p-1 rounded-full transition-colors ${
+            className={`rounded-lg p-1.5 transition-colors ${
               canNavigateNext
                 ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
                 : 'text-gray-300 cursor-not-allowed'
@@ -425,22 +425,22 @@ export function TransactionTable({
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'expense' | 'income')}>
-        <TabsList className="grid w-full grid-cols-2 h-11">
-          <TabsTrigger value="expense" className="text-xs">
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'expense' | 'income')} className="flex min-h-0 flex-1 flex-col">
+        <TabsList className="grid h-11 w-full flex-shrink-0 grid-cols-2 rounded-xl border-0 bg-slate-100 p-1">
+          <TabsTrigger value="expense" className="rounded-lg border-0 text-xs font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm">
             Pengeluaran
           </TabsTrigger>
-          <TabsTrigger value="income" className="text-xs">
+          <TabsTrigger value="income" className="rounded-lg border-0 text-xs font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm">
             Pemasukan
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-3 mt-4">
+        <TabsContent value={activeTab} className="mt-4 flex min-h-0 flex-1 flex-col data-[state=inactive]:hidden">
           {/* Filters and Sort */}
-          <div className="flex gap-2 items-center">
+          <div className="mb-3 flex flex-shrink-0 items-center gap-2">
             {/* Category Filter */}
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="flex-1 h-8 text-xs">
+              <SelectTrigger className="h-9 flex-1 rounded-xl border-slate-200 bg-white text-xs shadow-sm">
                 <div className="flex items-center gap-1">
                   <Filter className="w-3 h-3" />
                   <SelectValue placeholder="Kategori" />
@@ -461,7 +461,7 @@ export function TransactionTable({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 px-2 text-xs"
+                className="h-9 rounded-xl border-slate-200 px-2.5 text-xs shadow-sm"
                 onClick={() => handleSort('date')}
               >
                 <Calendar className="w-3 h-3 mr-1" />
@@ -472,7 +472,7 @@ export function TransactionTable({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 px-2 text-xs"
+                className="h-9 rounded-xl border-slate-200 px-2.5 text-xs shadow-sm"
                 onClick={() => handleSort('amount')}
               >
                 Rp
@@ -483,7 +483,7 @@ export function TransactionTable({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 px-2 text-xs"
+                className="h-9 rounded-xl border-slate-200 px-2.5 text-xs shadow-sm"
                 onClick={() => handleSort('category')}
               >
                 Cat
@@ -495,10 +495,14 @@ export function TransactionTable({
           </div>
 
           {/* Transaction List */}
-          <div className="space-y-2 max-h-[50vh] overflow-y-auto pb-2">
+          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pb-3 pr-1 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]">
             {processedData.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 text-sm">
-                Tidak ada transaksi untuk bulan ini
+              <div className="flex h-full min-h-48 flex-col items-center justify-center text-center text-slate-400">
+                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100">
+                  <ReceiptText className="h-5 w-5" />
+                </div>
+                <p className="text-sm font-medium text-slate-600">Belum ada transaksi</p>
+                <p className="mt-1 text-xs">Tidak ada data untuk bulan ini</p>
               </div>
             ) : (
               processedData.map((transaction, index) => {
@@ -509,20 +513,20 @@ export function TransactionTable({
                 return (
                   <div
                     key={transactionId}
-                    className="relative p-3 bg-gray-50 rounded-lg border"
+                    className="group relative rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-all hover:border-slate-300 hover:shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
                   >
                     {!isEditing ? (
                       <>
                         {/* Row 1: Category/Date and Amount */}
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex-1 min-w-0 pr-2">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {transaction.category} <span className="text-xs text-gray-500">{formatDate(transaction.date)}</span>
+                            <p className="truncate text-sm font-semibold tracking-tight text-slate-900">
+                              {transaction.category} <span className="ml-1 text-[11px] font-medium text-slate-400">{formatDate(transaction.date)}</span>
                             </p>
                           </div>
                           <div className="flex-shrink-0 text-right">
-                            <p className={`text-sm font-semibold ${
-                              activeTab === 'expense' ? 'text-red-600' : 'text-green-600'
+                            <p className={`text-sm font-bold tabular-nums tracking-tight ${
+                              activeTab === 'expense' ? 'text-rose-600' : 'text-emerald-600'
                             }`}>
                               {activeTab === 'expense' ? '-' : '+'}
                               {formatAmount(transaction.amount)}
@@ -534,17 +538,17 @@ export function TransactionTable({
                         <div className="flex items-center justify-between">
                           <div className="flex-1 min-w-0 pr-2">
                             {transaction.description ? (
-                              <p className="text-xs text-gray-600 truncate">
+                              <p className="truncate text-xs leading-5 text-slate-500">
                                 {transaction.description}
                               </p>
                             ) : (
                               <div className="h-4"></div> // Placeholder for consistent height
                             )}
                           </div>
-                          <div className="flex-shrink-0 flex gap-1">
+                          <div className="flex flex-shrink-0 gap-1">
                             <button
                               onClick={() => handleEdit(transaction)}
-                              className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                              className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
                               title="Edit transaction"
                             >
                               <Edit2 className="w-3 h-3" />
@@ -552,7 +556,7 @@ export function TransactionTable({
                             <button
                               onClick={() => handleDelete(transaction)}
                               disabled={deletingId === transactionId}
-                              className="p-1 text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-50"
                               title="Delete transaction"
                             >
                               {deletingId === transactionId ? (
@@ -638,27 +642,26 @@ export function TransactionTable({
             )}
           </div>
 
-          {/* Summary - Fixed at bottom */}
+          {/* Summary */}
           {processedData.length > 0 && (
-            <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm px-4">
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-4 py-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
-                    Total ({processedData.length} transaksi):
-                  </span>
-                  <span className={`text-sm font-bold ${
-                    activeTab === 'expense' ? 'text-red-600' : 'text-green-600'
-                  }`}>
-                    {formatAmount(
-                      processedData.reduce((sum, transaction) => {
-                        const amount = typeof transaction.amount === 'number' 
-                          ? transaction.amount 
-                          : parseFloat(String(transaction.amount) || '0')
-                        return sum + (isNaN(amount) ? 0 : amount)
-                      }, 0)
-                    )}
-                  </span>
+            <div className="-mx-4 flex-shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-3.5 backdrop-blur-sm">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Total Transaksi</p>
+                  <p className="mt-0.5 text-sm font-semibold text-slate-700">{processedData.length} transaksi</p>
                 </div>
+                <span className={`text-xl font-bold tabular-nums tracking-tight ${
+                  activeTab === 'expense' ? 'text-rose-600' : 'text-emerald-600'
+                }`}>
+                  {formatAmount(
+                    processedData.reduce((sum, transaction) => {
+                      const amount = typeof transaction.amount === 'number'
+                        ? transaction.amount
+                        : parseFloat(String(transaction.amount) || '0')
+                      return sum + (isNaN(amount) ? 0 : amount)
+                    }, 0)
+                  )}
+                </span>
               </div>
             </div>
           )}
@@ -667,63 +670,70 @@ export function TransactionTable({
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-lg">
-          <DialogHeader>
-            <DialogTitle>Delete Transaction</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this {activeTab === 'expense' ? 'expense' : 'income'}?
+        <DialogContent className="w-[calc(100%-2rem)] max-w-sm gap-0 overflow-hidden rounded-3xl border-0 bg-white p-0 shadow-[0_24px_80px_rgba(15,23,42,0.24)]">
+          <DialogHeader className="px-6 pb-5 pt-6 text-left">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 ring-1 ring-rose-100">
+              <AlertTriangle className="h-5 w-5" strokeWidth={2.25} />
+            </div>
+            <DialogTitle className="text-xl font-bold tracking-tight text-slate-950">
+              Hapus transaksi?
+            </DialogTitle>
+            <DialogDescription className="mt-1.5 text-sm leading-6 text-slate-500">
+              Transaksi ini akan dihapus secara permanen dan tidak dapat dipulihkan.
             </DialogDescription>
           </DialogHeader>
           
           {/* Transaction Details */}
           {transactionToDelete && (
-            <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {transactionToDelete.category} <span className="text-xs text-gray-500">({formatDate(transactionToDelete.date)})</span>
+            <div className="mx-6 rounded-2xl border border-slate-200/80 bg-slate-50 p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-900">
+                    {transactionToDelete.category}
+                  </p>
+                  <p className="mt-1 text-xs font-medium text-slate-400">
+                    {formatDate(transactionToDelete.date)}
                   </p>
                 </div>
-                <p className={`text-sm font-semibold ${
-                  activeTab === 'expense' ? 'text-red-600' : 'text-green-600'
+                <p className={`flex-shrink-0 text-base font-bold tabular-nums tracking-tight ${
+                  activeTab === 'expense' ? 'text-rose-600' : 'text-emerald-600'
                 }`}>
                   {activeTab === 'expense' ? '-' : '+'}
                   {formatAmount(transactionToDelete.amount)}
                 </p>
               </div>
               {transactionToDelete.description && (
-                <p className="text-xs text-gray-600 mt-1 text-left">
+                <p className="mt-3 border-t border-slate-200 pt-3 text-left text-xs leading-5 text-slate-500">
                   {transactionToDelete.description}
                 </p>
               )}
             </div>
           )}
-          
-          {/* Warning Message */}
-          <div className="text-center">
-            <span className="text-sm text-gray-600">This action cannot be undone.</span>
-          </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="mt-6 grid grid-cols-2 gap-3 border-t border-slate-100 bg-slate-50/70 px-6 py-5 sm:grid-cols-2 sm:gap-3">
             <Button
               variant="outline"
               onClick={cancelDelete}
               disabled={deletingId !== null}
+              className="h-11 rounded-xl border-slate-200 bg-white font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
             >
-              Cancel
+              Batal
             </Button>
             <Button
-              variant="destructive"
               onClick={confirmDelete}
               disabled={deletingId !== null}
+              className="h-11 rounded-xl bg-rose-600 font-semibold text-white shadow-[0_8px_20px_rgba(225,29,72,0.22)] hover:bg-rose-700"
             >
               {deletingId !== null ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Deleting...
+                  Menghapus...
                 </>
               ) : (
-                'Delete'
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Hapus
+                </>
               )}
             </Button>
           </DialogFooter>

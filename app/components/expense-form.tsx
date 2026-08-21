@@ -188,12 +188,14 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
   }
 
   return (
-    <div className="space-y-4 w-full max-w-sm flex flex-col mt-2">
-      {/* Category Buttons */}
-      <div className="flex gap-2 w-full">
-        <Button
-          variant={activeCategory === 'expense' ? "default" : "outline"}
-          className="flex-1 h-8 text-xs rounded-full"
+    <div className="mt-2 flex w-full max-w-sm flex-shrink-0 flex-col space-y-4">
+      {/* Category Segmented Control */}
+      <div className="flex gap-1 w-full bg-gray-100 rounded-xl p-1">
+        <button
+          className={`flex-1 h-9 text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${activeCategory === 'expense'
+            ? 'bg-white text-rose-600 shadow-sm'
+            : 'text-gray-500 hover:text-gray-700'
+            }`}
           onClick={() => {
             setActiveCategory('expense')
             setSelectedCategory('') // Clear selected category when switching
@@ -202,12 +204,14 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
             setValidationErrors({ amount: false, category: false, date: false })
           }}
         >
-          <TrendingDown className="w-3 h-3 mr-1" />
+          <TrendingDown className="w-3.5 h-3.5" />
           Pengeluaran
-        </Button>
-        <Button
-          variant={activeCategory === 'income' ? "default" : "outline"}
-          className="flex-1 h-8 text-xs rounded-full"
+        </button>
+        <button
+          className={`flex-1 h-9 text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${activeCategory === 'income'
+            ? 'bg-white text-emerald-600 shadow-sm'
+            : 'text-gray-500 hover:text-gray-700'
+            }`}
           onClick={() => {
             setActiveCategory('income')
             setSelectedCategory('') // Clear selected category when switching
@@ -216,11 +220,9 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
             setValidationErrors({ amount: false, category: false, date: false })
           }}
         >
-          <TrendingUp className="w-3 h-3 mr-1" />
+          <TrendingUp className="w-3.5 h-3.5" />
           Pemasukan
-        </Button>
-
-
+        </button>
       </div>
 
       {/* Input Form */}
@@ -229,7 +231,7 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
         <div className="px-4 space-y-4 w-full">
           <div className="w-full">
             <div className="relative w-full">
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xl text-secondary-foreground/50 font-medium">
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xl text-gray-400 font-medium">
                 Rp
               </span>
               <input
@@ -256,10 +258,10 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
                   }
                 }}
                 className={cn(
-                  "text-xl h-[3rem] leading-[3rem] font-medium border-0 border-b rounded-none focus:placeholder:opacity-0 focus:border-opacity-0 focus:outline-none focus:ring-0 px-0 placeholder:text-secondary-foreground/50 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full pl-[3rem] bg-transparent transition-colors",
+                  "text-xl h-[3rem] leading-[3rem] font-semibold border-0 border-b rounded-none focus:placeholder:opacity-0 focus:border-opacity-0 focus:outline-none focus:ring-0 px-0 placeholder:text-gray-300 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full pl-[3rem] bg-transparent transition-colors",
                   validationErrors.amount
                     ? "border-red-500 focus:border-red-500"
-                    : "border-secondary-foreground/50"
+                    : "border-gray-200 focus:border-blue-500"
                 )}
               />
             </div>
@@ -284,7 +286,7 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
                   "flex items-center gap-2 w-full px-0 py-2 text-sm text-left bg-transparent border-0 border-b rounded-none focus:outline-none focus:ring-0 hover:bg-transparent disabled:opacity-50 transition-colors",
                   validationErrors.category
                     ? "border-red-500 focus:border-red-500"
-                    : "border-secondary-foreground/50 focus:border-secondary-foreground"
+                    : "border-gray-200 focus:border-blue-500"
                 )}>
                   <div className="flex items-center gap-2">
                     {selectedCategory ? (
@@ -335,7 +337,7 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
                     "flex items-center gap-2 w-full h-10 px-0 py-2 text-sm text-left bg-transparent border-0 border-b rounded-none focus:outline-none focus:ring-0 hover:bg-transparent transition-colors",
                     validationErrors.date
                       ? "border-red-500 focus:border-red-500"
-                      : "border-secondary-foreground/50 focus:border-secondary-foreground"
+                      : "border-gray-200 focus:border-blue-500"
                   )}>
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="w-4 h-4 flex-shrink-0" />
@@ -370,7 +372,7 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
             <textarea
               id="note"
               placeholder="Catatan..."
-              className="resize-none px-0 border-0 border-b border-secondary-foreground/50 rounded-none focus:ring-0 focus-visible:ring-0 focus:outline-none placeholder:text-secondary-foreground/50 w-full align-bottom placeholder:bottom-1 placeholder:left-0 flex h-[2rem] focus:placeholder:opacity-0 max-h-none overflow-hidden bg-transparent"
+              className="resize-none px-0 border-0 border-b border-gray-200 focus:border-blue-500 rounded-none focus:ring-0 focus-visible:ring-0 focus:outline-none placeholder:text-gray-300 w-full align-bottom placeholder:bottom-1 placeholder:left-0 flex h-[2rem] focus:placeholder:opacity-0 max-h-none overflow-hidden bg-transparent transition-colors"
               value={note}
               onChange={(e) => {
                 e.target.style.height = '2rem';
@@ -385,14 +387,14 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
         <Button
           onClick={handleSave}
           disabled={loading}
-          className="w-full h-8 text-sm font-medium rounded-full"
+          className="w-full h-11 text-sm font-semibold rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-600/25 transition-all"
         >
           {loading ? (
-            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            <Loader2 className="w-4 h-4 mr-1 animate-spin" />
           ) : (
-            <Wallet className="w-3 h-3 mr-1" />
+            <Wallet className="w-4 h-4 mr-1" />
           )}
-          {loading ? 'Saving...' : 'Save'}
+          {loading ? 'Saving...' : 'Save Transaction'}
         </Button>
       </div>
     </div>

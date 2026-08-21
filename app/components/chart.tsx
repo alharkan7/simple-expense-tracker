@@ -224,19 +224,17 @@ export function Chart({
 
   if (loading) {
     return (
-      <div className="text-center space-y-2 w-full max-w-sm">
+      <div className="w-full max-w-sm flex-shrink-0 space-y-3 text-center">
         {/* Header section - matches the navigation and balance display */}
         <div>
-          <div className="flex items-center justify-center gap-2 mb-1">
+          <div className="flex items-center justify-center gap-2 mb-2">
             <button
               disabled={true}
               className="p-1 rounded-full text-gray-300 cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <p className="text-gray-600 text-sm">
-              Loading...
-            </p>
+            <div className="h-4 bg-gray-200 rounded-full w-28 animate-pulse"></div>
             <button
               disabled={true}
               className="p-1 rounded-full text-gray-300 cursor-not-allowed"
@@ -247,36 +245,32 @@ export function Chart({
 
           {/* Balance and Budget Info - matches the actual balance display */}
           <div className="flex items-center justify-center gap-2">
-            <h1 className="text-2xl font-bold text-gray-900 break-words">
-              --
-            </h1>
+            <div className="h-9 bg-gray-200 rounded-lg w-40 animate-pulse"></div>
           </div>
 
           <div className="text-center mt-2">
-            <p className="text-xs text-gray-500">
-              Budget: --
-            </p>
+            <div className="h-3 bg-gray-100 rounded-full w-36 animate-pulse mx-auto"></div>
           </div>
         </div>
 
         {/* Chart Container - responsive dimensions for mobile */}
-        <div className="min-h-[120px] max-h-[200px] h-[25vh] p-2 w-full mx-auto max-w-full relative flex items-center justify-center">
-          <div className="min-h-[100px] max-h-[160px] h-[20vh] w-40 mx-auto max-w-full relative rounded-full overflow-hidden flex items-center justify-center bg-gray-50">
+        <div className="relative mx-auto flex h-[180px] w-full max-w-full flex-shrink-0 items-center justify-center p-2">
+          <div className="relative mx-auto flex h-40 w-40 max-w-full items-center justify-center overflow-hidden rounded-full bg-gray-50">
             <div className="text-center">
               <Loader2 className="animate-spin h-8 w-8 text-blue-600 mx-auto" />
-              <p className="text-gray-600 mt-2 text-sm">Loading data...</p>
+              <p className="text-gray-500 mt-2 text-sm">Loading data...</p>
             </div>
           </div>
         </div>
 
         {/* Bottom section - matches the income/expense totals */}
-        <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
-          <span className="flex items-center justify-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-gray-400">
-            <Plus className="w-4 h-4" />
+        <div className="grid grid-cols-2 gap-3 mt-2 text-sm">
+          <span className="flex items-center justify-center gap-1 px-2 py-2 rounded-xl bg-gray-100 text-gray-400">
+            <Minus className="w-4 h-4" />
             --
           </span>
-          <span className="flex items-center justify-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-gray-400">
-            <Minus className="w-4 h-4" />
+          <span className="flex items-center justify-center gap-1 px-2 py-2 rounded-xl bg-gray-100 text-gray-400">
+            <Plus className="w-4 h-4" />
             --
           </span>
         </div>
@@ -285,27 +279,27 @@ export function Chart({
   }
 
   return (
-    <div className="text-center space-y-2 w-full max-w-sm">
+    <div className="w-full max-w-sm flex-shrink-0 space-y-2 text-center">
       <div>
-        <div className="flex items-center justify-center gap-2 mb-1">
+        <div className="inline-flex items-center gap-1 bg-gray-100 rounded-full p-1 mb-2">
           <button
             onClick={() => onNavigateMonth('prev')}
             disabled={!canNavigatePrevInternal}
-            className={`p-1 rounded-full transition-colors ${canNavigatePrevInternal
-                ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+            className={`p-1.5 rounded-full transition-colors ${canNavigatePrevInternal
+                ? 'text-gray-600 hover:bg-white hover:shadow-sm hover:text-gray-900'
                 : 'text-gray-300 cursor-not-allowed'
               }`}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-700 text-xs font-semibold tracking-wide min-w-[9rem]">
             {chartType === 'donut' ? 'Saldo' : 'Tren'} {getMonthName(currentMonth)} {currentYear}
           </p>
           <button
             onClick={() => onNavigateMonth('next')}
             disabled={!canNavigateNextInternal}
-            className={`p-1 rounded-full transition-colors ${canNavigateNextInternal
-                ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+            className={`p-1.5 rounded-full transition-colors ${canNavigateNextInternal
+                ? 'text-gray-600 hover:bg-white hover:shadow-sm hover:text-gray-900'
                 : 'text-gray-300 cursor-not-allowed'
               }`}
           >
@@ -315,7 +309,7 @@ export function Chart({
 
         {/* Balance and Budget Info - Always show regardless of chart type */}
         <div className="flex items-center justify-center gap-2">
-          <h1 className="text-2xl font-bold text-gray-900 break-words">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 break-words tabular-nums">
             Rp {balance.toLocaleString('id-ID')}
           </h1>
           {monthlyBudget === 0 && (
@@ -329,8 +323,8 @@ export function Chart({
           )}
         </div>
 
-        <div className="text-center mt-2">
-          <p className="text-xs text-gray-500">
+        <div className="text-center mt-1">
+          <p className="text-xs text-gray-400">
             Budget: Rp {Math.floor(monthlyBudget).toLocaleString('id-ID')}
             {!budgetsLoaded && <Loader2 className="inline w-3 h-3 ml-1 animate-spin" />}
           </p>
@@ -338,7 +332,7 @@ export function Chart({
       </div>
 
       {/* Chart Container with Animation - responsive for mobile */}
-      <div className="min-h-[120px] max-h-[200px] h-[25vh] p-2 w-full mx-auto max-w-full relative overflow-hidden">
+      <div className="relative mx-auto h-[180px] w-full max-w-full flex-shrink-0 overflow-hidden p-2">
         {/* Chart Type Navigation */}
         {chartType === 'line' && (
           <button
@@ -363,7 +357,7 @@ export function Chart({
         {onShowDetails && (
           <button
             onClick={onShowDetails}
-            className="absolute top-2 right-2 z-10 text-gray-600 hover:text-gray-800 transition-colors bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:shadow-md"
+            className="absolute top-2 right-2 z-10 text-gray-600 hover:text-gray-900 transition-colors bg-gray-100/90 backdrop-blur-sm rounded-lg p-1.5 hover:bg-gray-200"
             title="View transaction details"
           >
             <List className="w-4 h-4" />
@@ -378,7 +372,7 @@ export function Chart({
               chartType === 'line' ? 'transform -translate-x-full' : 'transform translate-x-0'
             }`}
           >
-            <div className="min-h-[100px] max-h-[160px] h-[20vh] w-40 mx-auto max-w-full relative rounded-lg overflow-hidden">
+            <div className="relative mx-auto h-40 w-40 max-w-full overflow-hidden rounded-lg">
               <ResponsiveContainer width="100%" height="100%">
                 <RechartsPieChart>
                   <Pie
@@ -505,7 +499,7 @@ export function Chart({
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="min-h-[100px] max-h-[160px] h-[20vh] flex items-center justify-center text-gray-500 text-sm">
+                <div className="flex h-40 items-center justify-center text-sm text-gray-500">
                   No data available for this month
                 </div>
               )}
@@ -514,18 +508,20 @@ export function Chart({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
-        <span className={`flex items-center justify-center gap-1 px-2 py-1 rounded-full transition-all duration-200 ${mode === 'expense'
-          ? 'bg-red-100 text-red-800 font-bold shadow-sm'
-          : 'text-red-600'
-          }`}>
+      <div className="grid grid-cols-2 gap-3 mt-2 text-sm">
+        <span
+          className={`flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl transition-all duration-200 tabular-nums ${mode === 'expense'
+            ? 'bg-rose-50 text-rose-700 font-bold ring-1 ring-rose-200'
+            : 'bg-gray-50 text-rose-500 ring-1 ring-gray-100'
+            }`}>
           <Minus className="w-4 h-4" />
           {totalExpenses.toLocaleString('id-ID')}
         </span>
-        <span className={`flex items-center justify-center gap-1 px-2 py-1 rounded-full transition-all duration-200 ${mode === 'income'
-          ? 'bg-green-100 text-green-800 font-bold shadow-sm'
-          : 'text-green-600'
-          }`}>
+        <span
+          className={`flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl transition-all duration-200 tabular-nums ${mode === 'income'
+            ? 'bg-emerald-50 text-emerald-700 font-bold ring-1 ring-emerald-200'
+            : 'bg-gray-50 text-emerald-600 ring-1 ring-gray-100'
+            }`}>
           <Plus className="w-4 h-4" />
           {totalIncome.toLocaleString('id-ID')}
         </span>

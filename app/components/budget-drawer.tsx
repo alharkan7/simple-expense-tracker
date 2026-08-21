@@ -312,7 +312,7 @@ export function BudgetDrawer({ isOpen, onClose, currentMonth: propCurrentMonth, 
 
   return (
     <div className={`fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={handleClose}>
-      <div className={`w-full max-w-sm mx-auto bg-white rounded-t-3xl shadow-lg transform transition-transform duration-300 ease-in-out ${isAnimating ? 'translate-y-0' : 'translate-y-full'}`} onClick={(e) => e.stopPropagation()}>
+      <div className={`w-full bg-white rounded-t-3xl shadow-lg transform transition-transform duration-300 ease-in-out ${isAnimating ? 'translate-y-0' : 'translate-y-full'}`} onClick={(e) => e.stopPropagation()}>
         {/* Header with month navigation */}
         <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200">
           <Button
