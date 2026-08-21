@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, TrendingUp, TrendingDown, Wallet, Loader2 } from 'lucide-react'
+import { CalendarIcon, TrendingUp, TrendingDown, Wallet, Loader2, Mic, Square } from 'lucide-react'
 import { convertDatabaseCategoriesToForm, FormCategory } from '@/lib/icon-mapper'
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
@@ -50,6 +50,11 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
   const [expenseCategories, setExpenseCategories] = useState<FormCategory[]>([])
   const [incomeCategories, setIncomeCategories] = useState<FormCategory[]>([])
   const [categoriesLoading, setCategoriesLoading] = useState(true)
+  const [voiceState, setVoiceState] = useState<'idle' | 'recording' | 'processing'>('idle')
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const mediaStreamRef = useRef<MediaStream | null>(null)
+  const audioChunksRef = useRef<Blob[]>([])
+  const recordingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [validationErrors, setValidationErrors] = useState({
     amount: false,
     category: false,
@@ -109,6 +114,14 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
 
   useEffect(() => {
     fetchUserCategories()
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (recordingTimeoutRef.current) clearTimeout(recordingTimeoutRef.current)
+      if (mediaRecorderRef.current?.state === 'recording') mediaRecorderRef.current.stop()
+      mediaStreamRef.current?.getTracks().forEach(track => track.stop())
+    }
   }, [])
 
   // Notify parent component when category switches
@@ -184,6 +197,111 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
     } catch (error) {
       // Error handling is done in the parent component
       console.error('Form submission error:', error)
+    }
+  }
+
+  const processVoiceRecording = async (audioBlob: Blob, mimeType: string, categories: string[]) => {
+    setVoiceState('processing')
+
+    try {
+      const payload = new FormData()
+      const extension = mimeType.includes('mp4') ? 'm4a' : mimeType.includes('ogg') ? 'ogg' : 'webm'
+      payload.append('audio', audioBlob, `transaction.${extension}`)
+      payload.append('mode', activeCategory)
+      payload.append('categories', JSON.stringify(categories))
+      payload.append('today', format(new Date(), 'yyyy-MM-dd'))
+
+      const response = await fetch('/api/parse-voice-transaction', {
+        method: 'POST',
+        body: payload,
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Tidak dapat memahami rekaman.')
+      }
+
+      setAmount(String(result.amount))
+      setSelectedCategory(result.category)
+      const [year, month, day] = String(result.date).split('-').map(Number)
+      setDate(new Date(year, month - 1, day))
+      setNote(result.notes || '')
+      setValidationErrors({ amount: false, category: false, date: false })
+      toast.success('Form berhasil diisi. Silakan periksa kembali sebelum menyimpan.')
+    } catch (error) {
+      console.error('Voice transaction error:', error)
+      toast.error(error instanceof Error ? error.message : 'Tidak dapat memproses rekaman.')
+    } finally {
+      setVoiceState('idle')
+    }
+  }
+
+  const stopVoiceRecording = () => {
+    if (recordingTimeoutRef.current) {
+      clearTimeout(recordingTimeoutRef.current)
+      recordingTimeoutRef.current = null
+    }
+    if (mediaRecorderRef.current?.state === 'recording') {
+      mediaRecorderRef.current.stop()
+    }
+  }
+
+  const startVoiceRecording = async () => {
+    if (isDemoMode) {
+      toast.info('Input suara tersedia setelah masuk dengan akun Anda.')
+      return
+    }
+
+    const currentCategories = activeCategory === 'expense' ? expenseCategories : incomeCategories
+    if (categoriesLoading || currentCategories.length === 0) {
+      toast.error('Kategori belum tersedia. Silakan coba lagi sebentar.')
+      return
+    }
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      toast.error('Perekaman suara tidak didukung oleh browser ini.')
+      return
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      mediaStreamRef.current = stream
+      audioChunksRef.current = []
+
+      const supportedMimeTypes = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm']
+      const mimeType = supportedMimeTypes.find(type => MediaRecorder.isTypeSupported(type)) || ''
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream)
+      mediaRecorderRef.current = recorder
+
+      recorder.ondataavailable = event => {
+        if (event.data.size > 0) audioChunksRef.current.push(event.data)
+      }
+      recorder.onstop = () => {
+        const recordedType = recorder.mimeType || mimeType || 'audio/webm'
+        const audioBlob = new Blob(audioChunksRef.current, { type: recordedType })
+        stream.getTracks().forEach(track => track.stop())
+        mediaStreamRef.current = null
+        void processVoiceRecording(
+          audioBlob,
+          recordedType,
+          currentCategories.map(category => category.value)
+        )
+      }
+      recorder.onerror = () => {
+        stream.getTracks().forEach(track => track.stop())
+        mediaStreamRef.current = null
+        setVoiceState('idle')
+        toast.error('Perekaman suara gagal. Silakan coba lagi.')
+      }
+
+      recorder.start()
+      setVoiceState('recording')
+      recordingTimeoutRef.current = setTimeout(stopVoiceRecording, 30000)
+    } catch (error) {
+      console.error('Microphone access error:', error)
+      mediaStreamRef.current?.getTracks().forEach(track => track.stop())
+      mediaStreamRef.current = null
+      setVoiceState('idle')
+      toast.error('Akses mikrofon diperlukan untuk input suara.')
     }
   }
 
@@ -384,18 +502,45 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
         </div>
 
         {/* Save Button */}
-        <Button
-          onClick={handleSave}
-          disabled={loading}
-          className="w-full h-11 text-sm font-semibold rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-600/25 transition-all"
-        >
-          {loading ? (
-            <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-          ) : (
-            <Wallet className="w-4 h-4 mr-1" />
-          )}
-          {loading ? 'Saving...' : 'Save Transaction'}
-        </Button>
+        <div className="flex w-full gap-2">
+          <Button
+            onClick={handleSave}
+            disabled={loading || voiceState !== 'idle'}
+            className="h-11 flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-sm font-semibold shadow-lg shadow-blue-600/25 transition-all hover:from-blue-500 hover:to-indigo-500"
+          >
+            {loading ? (
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+            ) : (
+              <Wallet className="mr-1 h-4 w-4" />
+            )}
+            {loading ? 'Saving...' : 'Save Transaction'}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={voiceState === 'recording' ? stopVoiceRecording : startVoiceRecording}
+            disabled={loading || voiceState === 'processing'}
+            aria-label={voiceState === 'recording' ? 'Stop voice recording' : 'Fill transaction with voice'}
+            title={voiceState === 'recording' ? 'Stop recording' : 'Input dengan suara'}
+            className={cn(
+              'relative h-11 w-11 flex-shrink-0 rounded-xl border-slate-200 p-0 shadow-sm transition-all',
+              voiceState === 'recording'
+                ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100'
+                : 'bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600'
+            )}
+          >
+            {voiceState === 'processing' ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : voiceState === 'recording' ? (
+              <>
+                <span className="absolute inset-1 animate-ping rounded-lg bg-rose-400/15" />
+                <Square className="relative h-3.5 w-3.5 fill-current" />
+              </>
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   )
