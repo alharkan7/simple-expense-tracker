@@ -252,30 +252,13 @@ export default function MobileFinanceTracker() {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth())
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
 
-  // Animation state for smooth transitions
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [animationDirection, setAnimationDirection] = useState<'left' | 'right'>('right')
-
-  // Animation functions
+  // Screen navigation
   const showTransactionTableWithAnimation = () => {
-    setAnimationDirection('left')
-    setIsAnimating(true)
-    // Start animation immediately
     setShowTransactionTable(true)
-    // End animation after transition completes
-    setTimeout(() => {
-      setIsAnimating(false)
-    }, 300)
   }
 
   const hideTransactionTableWithAnimation = () => {
-    setAnimationDirection('right')
-    setIsAnimating(true)
-    // Wait for animation to complete before hiding
-    setTimeout(() => {
-      setShowTransactionTable(false)
-      setIsAnimating(false)
-    }, 300)
+    setShowTransactionTable(false)
   }
   
   // DEBUG: Log the initial month state
@@ -918,8 +901,9 @@ export default function MobileFinanceTracker() {
         <div className="absolute top-20 -left-24 w-64 h-64 rounded-full bg-indigo-400/15 blur-3xl animate-glow-slower"></div>
       </div>
 
-      {/* Centered content */}
-      <div className="relative z-10 h-full w-full flex flex-col">
+      {/* One page-level scroller: header, content, and footer move together. */}
+      <div className="ios-scrollbar relative z-10 h-full w-full overflow-y-auto overscroll-y-contain">
+        <div className="flex min-h-full w-full flex-col">
         {/* Header */}
         <div className="finance-shell-header mx-auto flex w-full max-w-sm flex-shrink-0 items-start justify-between px-5 pb-4 pt-[max(0.875rem,env(safe-area-inset-top))]">
           <div className="flex items-center gap-2">
@@ -982,17 +966,9 @@ export default function MobileFinanceTracker() {
         </div>
 
       {/* Main Content */}
-      <main className="relative flex min-h-0 w-full flex-1 flex-col items-center overflow-hidden rounded-t-[32px] border-t border-white/80 bg-[radial-gradient(circle_at_50%_-12%,rgba(219,234,254,0.85),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#f1f5f9_100%)] px-4 pb-0 pt-4 shadow-[0_-1px_0_rgba(255,255,255,0.75),0_24px_70px_rgba(2,8,30,0.42)]">
-
-        {/* Chart or Transaction Table Section */}
-        <div className="w-full h-full relative overflow-hidden">
-          {/* Chart Section */}
-          <div 
-            className={`absolute inset-0 transition-transform duration-300 ease-in-out ${
-              showTransactionTable ? 'transform -translate-x-full' : 'transform translate-x-0'
-            }`}
-          >
-            <div className="finance-main-scroll ios-scrollbar animate-surface-enter flex h-full w-full flex-col items-center overflow-y-auto overscroll-contain pb-4 [scroll-padding-bottom:1rem]">
+      <main className="relative w-full flex-none rounded-t-[32px] border-t border-white/80 bg-[radial-gradient(circle_at_50%_-12%,rgba(219,234,254,0.85),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#f1f5f9_100%)] px-4 pb-5 pt-4 shadow-[0_-1px_0_rgba(255,255,255,0.75),0_24px_70px_rgba(2,8,30,0.42)]">
+        {!showTransactionTable ? (
+          <div className="animate-surface-enter flex w-full flex-col items-center">
                 <Chart
                   data={chartData}
                   totalIncome={totalIncome}
@@ -1024,16 +1000,9 @@ export default function MobileFinanceTracker() {
                   onCategorySwitch={handleCategorySwitch}
                   isDemoMode={isDemoMode}
                 />
-            </div>
           </div>
-
-          {/* Transaction Table Section */}
-          <div 
-            className={`absolute inset-0 transition-transform duration-300 ease-in-out ${
-              showTransactionTable ? 'transform translate-x-0' : 'transform translate-x-full'
-            }`}
-          >
-            <div className="animate-surface-enter flex h-full w-full flex-col items-center overflow-hidden">
+        ) : (
+          <div className="animate-surface-enter flex w-full flex-col items-center">
               <TransactionTable
                 expenses={expenses}
                 incomes={incomes}
@@ -1045,9 +1014,8 @@ export default function MobileFinanceTracker() {
                 onBackClick={hideTransactionTableWithAnimation}
                 onRefreshData={() => fetchData(true)}
               />
-            </div>
           </div>
-        </div>
+        )}
       </main>
 
       {/* Settings Drawer */}
@@ -1119,6 +1087,7 @@ export default function MobileFinanceTracker() {
           currentMonth={currentMonth}
           currentYear={currentYear}
         />
+        </div>
       </div>
     </div>
   )

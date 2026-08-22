@@ -383,7 +383,7 @@ export function TransactionTable({
   }
 
   return (
-    <section className="flex h-full min-h-0 w-full flex-col">
+    <section className="flex w-full flex-col">
       {/* Header with back button and month navigation */}
       <div className="mb-3 flex flex-shrink-0 items-center justify-between px-0.5">
         {/* Back button */}
@@ -432,7 +432,7 @@ export function TransactionTable({
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'expense' | 'income')} className="flex min-h-0 flex-1 flex-col">
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'expense' | 'income')} className="flex w-full flex-col">
         <TabsList className="grid h-12 w-full flex-shrink-0 grid-cols-2 rounded-[17px] border border-slate-200/60 bg-slate-200/55 p-1">
           <TabsTrigger value="expense" className="ios-press rounded-[13px] border-0 text-xs font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-rose-600 data-[state=active]:shadow-[0_3px_10px_rgba(15,23,42,0.08)]">
             Pengeluaran
@@ -442,7 +442,7 @@ export function TransactionTable({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="mt-3 flex min-h-0 flex-1 flex-col data-[state=inactive]:hidden">
+        <TabsContent value={activeTab} className="mt-3 flex flex-col data-[state=inactive]:hidden">
           {/* Filters and Sort */}
           <div className="mb-3 flex flex-shrink-0 items-center gap-2">
             {/* Category Filter */}
@@ -502,7 +502,7 @@ export function TransactionTable({
           </div>
 
           {/* Transaction List */}
-          <div className="ios-scrollbar min-h-0 flex-1 space-y-2.5 overflow-y-auto overscroll-contain pb-3">
+          <div className="space-y-2.5 pb-3">
             {processedData.length === 0 ? (
               <div className="flex h-full min-h-48 flex-col items-center justify-center text-center text-slate-400">
                 <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100">
