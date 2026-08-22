@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { Bell, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
@@ -255,6 +255,45 @@ export default function MobileFinanceTracker() {
   // Animation state for smooth transitions
   const [isAnimating, setIsAnimating] = useState(false)
   const [animationDirection, setAnimationDirection] = useState<'left' | 'right'>('right')
+
+  // Fit the complete dashboard composition into the visible mobile viewport.
+  // The scale is uniform, so the chart, cards, controls, and typography retain
+  // their proportions when browser chrome reduces the available height.
+  const dashboardViewportRef = useRef<HTMLDivElement>(null)
+  const dashboardStackRef = useRef<HTMLDivElement>(null)
+  const [dashboardScale, setDashboardScale] = useState(1)
+
+  useLayoutEffect(() => {
+    const viewport = dashboardViewportRef.current
+    const stack = dashboardStackRef.current
+    if (!viewport || !stack) return
+
+    let animationFrame = 0
+
+    const fitDashboard = () => {
+      cancelAnimationFrame(animationFrame)
+      animationFrame = requestAnimationFrame(() => {
+        const availableHeight = viewport.clientHeight
+        const contentHeight = stack.scrollHeight
+        if (!availableHeight || !contentHeight) return
+
+        const nextScale = Math.min(1, Math.max(0.68, (availableHeight - 4) / contentHeight))
+        setDashboardScale(current => Math.abs(current - nextScale) > 0.002 ? nextScale : current)
+      })
+    }
+
+    const resizeObserver = new ResizeObserver(fitDashboard)
+    resizeObserver.observe(viewport)
+    resizeObserver.observe(stack)
+    window.visualViewport?.addEventListener('resize', fitDashboard)
+    fitDashboard()
+
+    return () => {
+      cancelAnimationFrame(animationFrame)
+      resizeObserver.disconnect()
+      window.visualViewport?.removeEventListener('resize', fitDashboard)
+    }
+  }, [])
 
   // Animation functions
   const showTransactionTableWithAnimation = () => {
@@ -992,38 +1031,50 @@ export default function MobileFinanceTracker() {
               showTransactionTable ? 'transform -translate-x-full' : 'transform translate-x-0'
             }`}
           >
-            <div className="finance-main-scroll ios-scrollbar animate-surface-enter flex h-full w-full flex-col items-center justify-evenly overflow-y-auto pb-3">
-              <Chart
-                data={chartData}
-                totalIncome={totalIncome}
-                totalExpenses={totalExpenses}
-                balance={balance}
-                loading={loading}
-                mode={chartMode}
-                chartType={chartType}
-                currentMonth={currentMonth}
-                currentYear={currentYear}
-                onNavigateMonth={navigateMonth}
-                onChartTypeSwitch={handleChartTypeSwitch}
-                canNavigatePrev={false}
-                canNavigateNext={false}
-                getMonthName={getMonthName}
-                expenses={expenses}
-                incomes={incomes}
-                monthlyBudget={monthlyBudget}
-                budgetLoading={budgetLoading}
-                budgetsLoaded={budgetsLoaded}
-                onOpenBudgetDrawer={() => setIsBudgetDrawerOpen(true)}
-                onShowDetails={showTransactionTableWithAnimation}
-              />
+            <div
+              ref={dashboardViewportRef}
+              className="finance-main-scroll ios-scrollbar animate-surface-enter h-full w-full overflow-hidden pb-3"
+            >
+              <div
+                ref={dashboardStackRef}
+                className="finance-dashboard-stack flex w-full flex-col items-center"
+                style={{
+                  transform: `scale(${dashboardScale})`,
+                  transformOrigin: 'top center',
+                }}
+              >
+                <Chart
+                  data={chartData}
+                  totalIncome={totalIncome}
+                  totalExpenses={totalExpenses}
+                  balance={balance}
+                  loading={loading}
+                  mode={chartMode}
+                  chartType={chartType}
+                  currentMonth={currentMonth}
+                  currentYear={currentYear}
+                  onNavigateMonth={navigateMonth}
+                  onChartTypeSwitch={handleChartTypeSwitch}
+                  canNavigatePrev={false}
+                  canNavigateNext={false}
+                  getMonthName={getMonthName}
+                  expenses={expenses}
+                  incomes={incomes}
+                  monthlyBudget={monthlyBudget}
+                  budgetLoading={budgetLoading}
+                  budgetsLoaded={budgetsLoaded}
+                  onOpenBudgetDrawer={() => setIsBudgetDrawerOpen(true)}
+                  onShowDetails={showTransactionTableWithAnimation}
+                />
 
-              {/* Form Section - Only show when chart is visible */}
-              <ExpenseForm
-                onSubmit={handleFormSubmit}
-                loading={formLoading}
-                onCategorySwitch={handleCategorySwitch}
-                isDemoMode={isDemoMode}
-              />
+                {/* Form Section - Only show when chart is visible */}
+                <ExpenseForm
+                  onSubmit={handleFormSubmit}
+                  loading={formLoading}
+                  onCategorySwitch={handleCategorySwitch}
+                  isDemoMode={isDemoMode}
+                />
+              </div>
             </div>
           </div>
 
