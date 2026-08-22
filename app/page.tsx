@@ -900,10 +900,10 @@ export default function MobileFinanceTracker() {
   }
 
   return (
-    <div className="w-full relative overflow-hidden bg-[#0a1128]" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+    <div className="relative w-full overflow-hidden bg-[#081126]" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
       {/* Hero background - matches login screen */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1128] via-[#0e1b3d] to-[#12275c]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_8%,rgba(75,112,255,0.28),transparent_30%),linear-gradient(160deg,#071024_0%,#0b1a3c_48%,#102d68_100%)]"></div>
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
@@ -921,11 +921,11 @@ export default function MobileFinanceTracker() {
       {/* Centered content */}
       <div className="relative z-10 h-full w-full flex flex-col">
         {/* Header */}
-        <div className="flex items-start justify-between px-4 py-3 w-full max-w-sm mx-auto flex-shrink-0">
+        <div className="flex w-full max-w-sm flex-shrink-0 items-start justify-between px-5 pb-4 pt-[max(0.875rem,env(safe-area-inset-top))] mx-auto">
           <div className="flex items-center gap-2">
             <div className="relative">
               <button
-                className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center transition-colors hover:bg-white/15"
+                className="ios-press flex h-10 w-10 items-center justify-center rounded-[14px] border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-xl hover:bg-white/15"
                 onClick={() => {
                   console.log('Bell clicked, balance:', balance, 'monthlyBudget:', monthlyBudget, 'totalExpenses:', totalExpenses, 'isNaN(balance):', isNaN(balance))
                   if (balance < 0 && !isNaN(balance)) {
@@ -945,7 +945,7 @@ export default function MobileFinanceTracker() {
               )}
             </div>
             <button
-              className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center transition-colors hover:bg-white/15"
+              className="ios-press flex h-10 w-10 items-center justify-center rounded-[14px] border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-xl hover:bg-white/15"
               onClick={async () => {
                 try {
                   clearCache()
@@ -982,7 +982,7 @@ export default function MobileFinanceTracker() {
         </div>
 
       {/* Main Content */}
-      <div className="flex-1 min-h-0 bg-white rounded-3xl px-4 pt-4 pb-0 w-full overflow-hidden flex flex-col items-center relative shadow-[0_18px_60px_rgba(2,8,30,0.4)]">
+      <main className="relative flex min-h-0 w-full flex-1 flex-col items-center overflow-hidden rounded-t-[32px] border-t border-white/80 bg-[radial-gradient(circle_at_50%_-12%,rgba(219,234,254,0.85),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#f1f5f9_100%)] px-4 pb-0 pt-4 shadow-[0_-1px_0_rgba(255,255,255,0.75),0_24px_70px_rgba(2,8,30,0.42)]">
 
         {/* Chart or Transaction Table Section */}
         <div className="w-full h-full relative overflow-hidden">
@@ -992,7 +992,7 @@ export default function MobileFinanceTracker() {
               showTransactionTable ? 'transform -translate-x-full' : 'transform translate-x-0'
             }`}
           >
-            <div className="w-full h-full flex flex-col items-center justify-evenly overflow-y-auto">
+            <div className="ios-scrollbar animate-surface-enter flex h-full w-full flex-col items-center justify-evenly overflow-y-auto pb-3">
               <Chart
                 data={chartData}
                 totalIncome={totalIncome}
@@ -1033,7 +1033,7 @@ export default function MobileFinanceTracker() {
               showTransactionTable ? 'transform translate-x-0' : 'transform translate-x-full'
             }`}
           >
-            <div className="w-full h-full flex flex-col items-center overflow-hidden">
+            <div className="animate-surface-enter flex h-full w-full flex-col items-center overflow-hidden">
               <TransactionTable
                 expenses={expenses}
                 incomes={incomes}
@@ -1048,7 +1048,7 @@ export default function MobileFinanceTracker() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Settings Drawer */}
       <Drawer open={isDrawerOpen} onOpenChange={(open) => {
@@ -1076,13 +1076,13 @@ export default function MobileFinanceTracker() {
       </Drawer>
 
         {/* Footer */}
-        <div className="flex-shrink-0 text-center pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]">
-          <span className="text-xs text-white/55">
+        <div className="flex-shrink-0 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-0.5 text-center leading-4">
+          <span className="text-[10px] text-white/50">
             © {new Date().getFullYear()} |
           </span>
           <button
             onClick={() => window.open('mailto:diananurindrasari94@gmail.com')}
-            className="text-xs text-white/55 hover:text-white/80 cursor-pointer transition-colors ml-1"
+            className="ml-1 cursor-pointer text-[10px] text-white/50 transition-colors hover:text-white/80"
           >
             Tim Peneliti DIPA Polinema
           </button>

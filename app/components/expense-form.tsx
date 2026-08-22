@@ -306,13 +306,13 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
   }
 
   return (
-    <div className="mt-2 flex w-full max-w-sm flex-shrink-0 flex-col space-y-4">
+    <section className="ios-card mt-3 flex w-full max-w-sm flex-shrink-0 flex-col space-y-3 rounded-[28px] p-4">
       {/* Category Segmented Control */}
-      <div className="flex gap-1 w-full bg-gray-100 rounded-xl p-1">
+      <div className="flex w-full gap-1 rounded-[16px] bg-slate-100/90 p-1 ring-1 ring-inset ring-slate-200/60">
         <button
-          className={`flex-1 h-9 text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${activeCategory === 'expense'
-            ? 'bg-white text-rose-600 shadow-sm'
-            : 'text-gray-500 hover:text-gray-700'
+          className={`ios-press flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[12px] text-xs font-semibold ${activeCategory === 'expense'
+            ? 'bg-white text-rose-600 shadow-[0_2px_8px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.03]'
+            : 'text-slate-500 hover:text-slate-700'
             }`}
           onClick={() => {
             setActiveCategory('expense')
@@ -326,9 +326,9 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
           Pengeluaran
         </button>
         <button
-          className={`flex-1 h-9 text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 ${activeCategory === 'income'
-            ? 'bg-white text-emerald-600 shadow-sm'
-            : 'text-gray-500 hover:text-gray-700'
+          className={`ios-press flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[12px] text-xs font-semibold ${activeCategory === 'income'
+            ? 'bg-white text-emerald-600 shadow-[0_2px_8px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.03]'
+            : 'text-slate-500 hover:text-slate-700'
             }`}
           onClick={() => {
             setActiveCategory('income')
@@ -344,12 +344,15 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
       </div>
 
       {/* Input Form */}
-      <div className="space-y-4 w-full">
+      <div className="w-full space-y-3">
         {/* Amount Input */}
-        <div className="px-4 space-y-4 w-full">
+        <div className="w-full space-y-3">
           <div className="w-full">
-            <div className="relative w-full">
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xl text-gray-400 font-medium">
+            <div className={cn(
+              "relative w-full rounded-[20px] bg-slate-50/90 ring-1 ring-inset transition-shadow",
+              validationErrors.amount ? "ring-rose-300" : "ring-slate-200/80 focus-within:ring-2 focus-within:ring-blue-400/40"
+            )}>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">
                 Rp
               </span>
               <input
@@ -376,17 +379,15 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
                   }
                 }}
                 className={cn(
-                  "text-xl h-[3rem] leading-[3rem] font-semibold border-0 border-b rounded-none focus:placeholder:opacity-0 focus:border-opacity-0 focus:outline-none focus:ring-0 px-0 placeholder:text-gray-300 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full pl-[3rem] bg-transparent transition-colors",
-                  validationErrors.amount
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-200 focus:border-blue-500"
+                  "h-[3.25rem] w-full appearance-none border-0 bg-transparent pl-12 pr-4 text-right text-[1.35rem] font-bold tracking-tight text-slate-950 placeholder:text-slate-300 focus:placeholder:opacity-0 focus:outline-none focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+                  validationErrors.amount ? "text-rose-700" : ""
                 )}
               />
             </div>
           </div>
 
           {/* Category & Date Row */}
-          <div className="flex gap-4 w-full">
+          <div className="flex w-full gap-2.5">
             {/* Category Select */}
             <div className="flex-1">
               <Select
@@ -401,10 +402,10 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
                 disabled={categoriesLoading}
               >
                 <SelectTrigger className={cn(
-                  "flex items-center gap-2 w-full px-0 py-2 text-sm text-left bg-transparent border-0 border-b rounded-none focus:outline-none focus:ring-0 hover:bg-transparent disabled:opacity-50 transition-colors",
+                  "ios-control h-11 w-full rounded-[15px] px-3 text-left text-sm shadow-none focus:ring-0 disabled:opacity-50",
                   validationErrors.category
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-200 focus:border-blue-500"
+                    ? "border-rose-300 bg-rose-50/50"
+                    : "hover:border-slate-300 hover:bg-white"
                 )}>
                   <div className="flex items-center gap-2">
                     {selectedCategory ? (
@@ -452,10 +453,10 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
               <Popover>
                 <PopoverTrigger asChild>
                   <button className={cn(
-                    "flex items-center gap-2 w-full h-10 px-0 py-2 text-sm text-left bg-transparent border-0 border-b rounded-none focus:outline-none focus:ring-0 hover:bg-transparent transition-colors",
+                    "ios-control ios-press flex h-11 w-full items-center gap-2 rounded-[15px] px-3 text-left text-sm",
                     validationErrors.date
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-200 focus:border-blue-500"
+                      ? "border-rose-300 bg-rose-50/50"
+                      : "hover:border-slate-300 hover:bg-white"
                   )}>
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="w-4 h-4 flex-shrink-0" />
@@ -490,10 +491,10 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
             <textarea
               id="note"
               placeholder="Catatan..."
-              className="resize-none px-0 border-0 border-b border-gray-200 focus:border-blue-500 rounded-none focus:ring-0 focus-visible:ring-0 focus:outline-none placeholder:text-gray-300 w-full align-bottom placeholder:bottom-1 placeholder:left-0 flex h-[2rem] focus:placeholder:opacity-0 max-h-none overflow-hidden bg-transparent transition-colors"
+              className="ios-control flex h-11 max-h-24 w-full resize-none overflow-hidden rounded-[15px] px-3 py-3 text-sm text-slate-800 shadow-none placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400/15"
               value={note}
               onChange={(e) => {
-                e.target.style.height = '2rem';
+                e.target.style.height = '2.75rem';
                 e.target.style.height = e.target.scrollHeight + 'px';
                 setNote(e.target.value);
               }}
@@ -502,11 +503,11 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
         </div>
 
         {/* Save Button */}
-        <div className="flex w-full gap-2">
+        <div className="flex w-full gap-2.5 pt-0.5">
           <Button
             onClick={handleSave}
             disabled={loading || voiceState !== 'idle'}
-            className="h-11 flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-sm font-semibold shadow-lg shadow-blue-600/25 transition-all hover:from-blue-500 hover:to-indigo-500"
+            className="ios-press h-12 flex-1 rounded-[16px] bg-[linear-gradient(135deg,#1677ff_0%,#4f46e5_100%)] text-sm font-semibold shadow-[0_10px_24px_rgba(37,99,235,0.25),inset_0_1px_0_rgba(255,255,255,0.22)] hover:brightness-105"
           >
             {loading ? (
               <Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -523,7 +524,7 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
             aria-label={voiceState === 'recording' ? 'Stop voice recording' : 'Fill transaction with voice'}
             title={voiceState === 'recording' ? 'Stop recording' : 'Input dengan suara'}
             className={cn(
-              'relative h-11 w-11 flex-shrink-0 rounded-xl border-slate-200 p-0 shadow-sm transition-all',
+              'ios-press relative h-12 w-12 flex-shrink-0 rounded-[16px] border-slate-200 p-0 shadow-[0_3px_12px_rgba(15,23,42,0.06)]',
               voiceState === 'recording'
                 ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100'
                 : 'bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600'
@@ -542,6 +543,6 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

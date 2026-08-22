@@ -229,6 +229,13 @@ export function TransactionTable({
     return categoryValue.replace(/^[^\w\s]+\s*/, '').trim()
   }
 
+  const getCategoryGlyph = (categoryValue: string) => {
+    const firstPart = categoryValue.trim().split(/\s+/)[0] || ''
+    return /[^\p{L}\p{N}]/u.test(firstPart)
+      ? firstPart
+      : (extractCategoryLabel(categoryValue).charAt(0) || '•').toUpperCase()
+  }
+
   const handleEdit = (transaction: TransactionRecord) => {
     const transactionId = `${transaction.id || 'temp'}-${transaction.date}-${transaction.amount}`
     setEditingId(transactionId)
@@ -376,30 +383,30 @@ export function TransactionTable({
   }
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col">
+    <section className="flex h-full min-h-0 w-full flex-col">
       {/* Header with back button and month navigation */}
-      <div className="mb-4 flex flex-shrink-0 items-center justify-between">
+      <div className="mb-3 flex flex-shrink-0 items-center justify-between px-0.5">
         {/* Back button */}
         {onBackClick && (
           <Button
             onClick={onBackClick}
             variant="ghost"
             size="sm"
-            className="h-9 w-9 rounded-xl border border-slate-200 bg-white p-0 text-slate-600 shadow-sm hover:bg-slate-50"
+            className="ios-control ios-press h-10 w-10 rounded-[14px] p-0 text-slate-600 hover:bg-white"
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
         )}
 
         {/* Month navigation */}
-        <div className="flex items-center gap-1 rounded-xl border border-slate-200/80 bg-slate-50 p-1">
+        <div className="ios-control flex items-center gap-1 rounded-[15px] p-1">
           <button
             onClick={() => onNavigateMonth('prev')}
             disabled={!canNavigatePrev}
-            className={`rounded-lg p-1.5 transition-colors ${
+            className={`ios-press rounded-[10px] p-1.5 ${
               canNavigatePrev
-                ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
-                : 'text-gray-300 cursor-not-allowed'
+                ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                : 'cursor-not-allowed text-slate-300'
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -410,10 +417,10 @@ export function TransactionTable({
           <button
             onClick={() => onNavigateMonth('next')}
             disabled={!canNavigateNext}
-            className={`rounded-lg p-1.5 transition-colors ${
+            className={`ios-press rounded-[10px] p-1.5 ${
               canNavigateNext
-                ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
-                : 'text-gray-300 cursor-not-allowed'
+                ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                : 'cursor-not-allowed text-slate-300'
             }`}
           >
             <ChevronRight className="w-4 h-4" />
@@ -426,21 +433,21 @@ export function TransactionTable({
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'expense' | 'income')} className="flex min-h-0 flex-1 flex-col">
-        <TabsList className="grid h-11 w-full flex-shrink-0 grid-cols-2 rounded-xl border-0 bg-slate-100 p-1">
-          <TabsTrigger value="expense" className="rounded-lg border-0 text-xs font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm">
+        <TabsList className="grid h-12 w-full flex-shrink-0 grid-cols-2 rounded-[17px] border border-slate-200/60 bg-slate-200/55 p-1">
+          <TabsTrigger value="expense" className="ios-press rounded-[13px] border-0 text-xs font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-rose-600 data-[state=active]:shadow-[0_3px_10px_rgba(15,23,42,0.08)]">
             Pengeluaran
           </TabsTrigger>
-          <TabsTrigger value="income" className="rounded-lg border-0 text-xs font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm">
+          <TabsTrigger value="income" className="ios-press rounded-[13px] border-0 text-xs font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-emerald-600 data-[state=active]:shadow-[0_3px_10px_rgba(15,23,42,0.08)]">
             Pemasukan
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="mt-4 flex min-h-0 flex-1 flex-col data-[state=inactive]:hidden">
+        <TabsContent value={activeTab} className="mt-3 flex min-h-0 flex-1 flex-col data-[state=inactive]:hidden">
           {/* Filters and Sort */}
           <div className="mb-3 flex flex-shrink-0 items-center gap-2">
             {/* Category Filter */}
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="h-9 flex-1 rounded-xl border-slate-200 bg-white text-xs shadow-sm">
+              <SelectTrigger className="ios-control h-10 flex-1 rounded-[14px] text-xs shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
                 <div className="flex items-center gap-1">
                   <Filter className="w-3 h-3" />
                   <SelectValue placeholder="Kategori" />
@@ -457,11 +464,11 @@ export function TransactionTable({
             </Select>
 
             {/* Sort Buttons */}
-            <div className="flex gap-1">
+            <div className="flex gap-1.5">
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 rounded-xl border-slate-200 px-2.5 text-xs shadow-sm"
+                className={`ios-control ios-press h-10 rounded-[14px] px-2.5 text-xs ${sortField === 'date' ? 'border-blue-200 bg-blue-50 text-blue-700' : ''}`}
                 onClick={() => handleSort('date')}
               >
                 <Calendar className="w-3 h-3 mr-1" />
@@ -472,7 +479,7 @@ export function TransactionTable({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 rounded-xl border-slate-200 px-2.5 text-xs shadow-sm"
+                className={`ios-control ios-press h-10 rounded-[14px] px-2.5 text-xs ${sortField === 'amount' ? 'border-blue-200 bg-blue-50 text-blue-700' : ''}`}
                 onClick={() => handleSort('amount')}
               >
                 Rp
@@ -483,7 +490,7 @@ export function TransactionTable({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 rounded-xl border-slate-200 px-2.5 text-xs shadow-sm"
+                className={`ios-control ios-press h-10 rounded-[14px] px-2.5 text-xs ${sortField === 'category' ? 'border-blue-200 bg-blue-50 text-blue-700' : ''}`}
                 onClick={() => handleSort('category')}
               >
                 Cat
@@ -495,7 +502,7 @@ export function TransactionTable({
           </div>
 
           {/* Transaction List */}
-          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pb-3 pr-1 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]">
+          <div className="ios-scrollbar min-h-0 flex-1 space-y-2.5 overflow-y-auto overscroll-contain pb-3">
             {processedData.length === 0 ? (
               <div className="flex h-full min-h-48 flex-col items-center justify-center text-center text-slate-400">
                 <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100">
@@ -513,18 +520,24 @@ export function TransactionTable({
                 return (
                   <div
                     key={transactionId}
-                    className="group relative rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-all hover:border-slate-300 hover:shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
+                    className="ios-card group relative rounded-[20px] px-3.5 py-3 transition-all duration-200 hover:-translate-y-px hover:border-blue-100 hover:shadow-[0_12px_30px_rgba(15,23,42,0.08)]"
                   >
                     {!isEditing ? (
-                      <>
-                        {/* Row 1: Category/Date and Amount */}
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex-1 min-w-0 pr-2">
-                            <p className="truncate text-sm font-semibold tracking-tight text-slate-900">
-                              {transaction.category} <span className="ml-1 text-[11px] font-medium text-slate-400">{formatDate(transaction.date)}</span>
+                      <div className="flex items-start gap-2.5">
+                        <div className={`mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] text-sm ring-1 ring-inset ${
+                          activeTab === 'expense'
+                            ? 'bg-rose-50/80 ring-rose-100'
+                            : 'bg-emerald-50/80 ring-emerald-100'
+                        }`}>
+                          {getCategoryGlyph(transaction.category)}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="min-w-0 truncate text-sm font-semibold leading-5 tracking-tight text-slate-900">
+                              {extractCategoryLabel(transaction.category)}
+                              <span className="ml-1.5 text-[10px] font-semibold tracking-normal text-slate-400">{formatDate(transaction.date)}</span>
                             </p>
-                          </div>
-                          <div className="flex-shrink-0 text-right">
                             <p className={`text-sm font-bold tabular-nums tracking-tight ${
                               activeTab === 'expense' ? 'text-rose-600' : 'text-emerald-600'
                             }`}>
@@ -532,23 +545,21 @@ export function TransactionTable({
                               {formatAmount(transaction.amount)}
                             </p>
                           </div>
-                        </div>
 
-                        {/* Row 2: Description and Action Buttons */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1 min-w-0 pr-2">
+                          <div className="mt-0.5 flex min-h-6 items-center justify-between">
+                            <div className="min-w-0 flex-1 pr-2">
                             {transaction.description ? (
-                              <p className="truncate text-xs leading-5 text-slate-500">
+                              <p className="truncate text-xs leading-4 text-slate-500">
                                 {transaction.description}
                               </p>
                             ) : (
                               <div className="h-4"></div> // Placeholder for consistent height
                             )}
-                          </div>
-                          <div className="flex flex-shrink-0 gap-1">
+                            </div>
+                            <div className="flex flex-shrink-0 gap-1">
                             <button
                               onClick={() => handleEdit(transaction)}
-                              className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                              className="ios-press rounded-[10px] p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                               title="Edit transaction"
                             >
                               <Edit2 className="w-3 h-3" />
@@ -556,7 +567,7 @@ export function TransactionTable({
                             <button
                               onClick={() => handleDelete(transaction)}
                               disabled={deletingId === transactionId}
-                              className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="ios-press rounded-[10px] p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-50"
                               title="Delete transaction"
                             >
                               {deletingId === transactionId ? (
@@ -565,9 +576,10 @@ export function TransactionTable({
                                 <Trash2 className="w-3 h-3" />
                               )}
                             </button>
+                            </div>
                           </div>
                         </div>
-                      </>
+                      </div>
                     ) : (
                       <>
                         {/* Edit Form */}
@@ -644,7 +656,7 @@ export function TransactionTable({
 
           {/* Summary */}
           {processedData.length > 0 && (
-            <div className="-mx-4 flex-shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-3.5 backdrop-blur-sm">
+            <div className="mb-3 flex-shrink-0 rounded-[20px] border border-blue-200/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(239,246,255,0.96))] px-4 py-3.5 shadow-[0_12px_30px_rgba(37,99,235,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-blue-100/70 backdrop-blur-xl">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Total Transaksi</p>
@@ -739,6 +751,6 @@ export function TransactionTable({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </section>
   )
 }

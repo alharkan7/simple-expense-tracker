@@ -58,6 +58,16 @@ export function Chart({
   onOpenBudgetDrawer,
   onShowDetails
 }: ChartProps) {
+  const formatCompactCurrency = (value: number) => {
+    if (Math.abs(value) >= 1_000_000) {
+      return `${(value / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} jt`
+    }
+    if (Math.abs(value) >= 1_000) {
+      return `${Math.round(value / 1_000).toLocaleString('id-ID')} rb`
+    }
+    return value.toLocaleString('id-ID')
+  }
+
   // Calculate navigation limits internally to avoid infinite loops
   const getDateLimits = () => {
     const allDates = [...expenses, ...incomes]
@@ -279,28 +289,28 @@ export function Chart({
   }
 
   return (
-    <div className="w-full max-w-sm flex-shrink-0 space-y-2 text-center">
+    <section className="ios-card w-full max-w-sm flex-shrink-0 space-y-3 rounded-[28px] p-4 text-center">
       <div>
-        <div className="inline-flex items-center gap-1 bg-gray-100 rounded-full p-1 mb-2">
+        <div className="ios-control mb-3 inline-flex items-center gap-1 rounded-full p-1">
           <button
             onClick={() => onNavigateMonth('prev')}
             disabled={!canNavigatePrevInternal}
-            className={`p-1.5 rounded-full transition-colors ${canNavigatePrevInternal
-                ? 'text-gray-600 hover:bg-white hover:shadow-sm hover:text-gray-900'
-                : 'text-gray-300 cursor-not-allowed'
+            className={`ios-press rounded-full p-1.5 ${canNavigatePrevInternal
+                ? 'text-slate-600 hover:bg-white hover:text-slate-950 hover:shadow-sm'
+                : 'cursor-not-allowed text-slate-300'
               }`}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <p className="text-gray-700 text-xs font-semibold tracking-wide min-w-[9rem]">
+          <p className="min-w-[9rem] text-xs font-semibold tracking-wide text-slate-700">
             {chartType === 'donut' ? 'Saldo' : 'Tren'} {getMonthName(currentMonth)} {currentYear}
           </p>
           <button
             onClick={() => onNavigateMonth('next')}
             disabled={!canNavigateNextInternal}
-            className={`p-1.5 rounded-full transition-colors ${canNavigateNextInternal
-                ? 'text-gray-600 hover:bg-white hover:shadow-sm hover:text-gray-900'
-                : 'text-gray-300 cursor-not-allowed'
+            className={`ios-press rounded-full p-1.5 ${canNavigateNextInternal
+                ? 'text-slate-600 hover:bg-white hover:text-slate-950 hover:shadow-sm'
+                : 'cursor-not-allowed text-slate-300'
               }`}
           >
             <ChevronRight className="w-4 h-4" />
@@ -309,13 +319,13 @@ export function Chart({
 
         {/* Balance and Budget Info - Always show regardless of chart type */}
         <div className="flex items-center justify-center gap-2">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 break-words tabular-nums">
+          <h1 className="break-words text-[2rem] font-bold tracking-[-0.04em] text-slate-950 tabular-nums">
             Rp {balance.toLocaleString('id-ID')}
           </h1>
           {monthlyBudget === 0 && (
             <button
               onClick={onOpenBudgetDrawer}
-              className="text-blue-500 hover:text-blue-700 transition-colors"
+              className="ios-press rounded-full p-1 text-blue-500 hover:bg-blue-50 hover:text-blue-700"
               title="Set budget for this month"
             >
               <Info className="w-4 h-4" />
@@ -323,8 +333,8 @@ export function Chart({
           )}
         </div>
 
-        <div className="text-center mt-1">
-          <p className="text-xs text-gray-400">
+        <div className="mt-1 text-center">
+          <p className="text-[11px] font-medium tracking-wide text-slate-400">
             Budget: Rp {Math.floor(monthlyBudget).toLocaleString('id-ID')}
             {!budgetsLoaded && <Loader2 className="inline w-3 h-3 ml-1 animate-spin" />}
           </p>
@@ -332,12 +342,12 @@ export function Chart({
       </div>
 
       {/* Chart Container with Animation - responsive for mobile */}
-      <div className="relative mx-auto h-[180px] w-full max-w-full flex-shrink-0 overflow-hidden p-2">
+      <div className="relative mx-auto h-[168px] w-full max-w-full flex-shrink-0 overflow-hidden rounded-[22px] bg-[radial-gradient(circle_at_center,rgba(239,246,255,0.9),rgba(248,250,252,0.35)_48%,transparent_72%)] p-1">
         {/* Chart Type Navigation */}
         {chartType === 'line' && (
           <button
             onClick={switchToDonutChartWithAnimation}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-1 text-gray-600 hover:text-gray-800 transition-colors"
+            className="ios-control ios-press absolute left-1 top-1/2 z-10 -translate-y-1/2 rounded-full p-1.5 text-slate-500 hover:text-slate-900"
             title="Switch to Chart view"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -346,7 +356,7 @@ export function Chart({
         {chartType === 'donut' && (
           <button
             onClick={switchToLineChartWithAnimation}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-1 text-gray-600 hover:text-gray-800 transition-colors"
+            className="ios-control ios-press absolute right-1 top-1/2 z-10 -translate-y-1/2 rounded-full p-1.5 text-slate-500 hover:text-slate-900"
             title="Switch to Trend view"
           >
             <ChevronRight className="w-4 h-4" />
@@ -357,7 +367,7 @@ export function Chart({
         {onShowDetails && (
           <button
             onClick={onShowDetails}
-            className="absolute top-2 right-2 z-10 text-gray-600 hover:text-gray-900 transition-colors bg-gray-100/90 backdrop-blur-sm rounded-lg p-1.5 hover:bg-gray-200"
+            className="ios-control ios-press absolute right-1 top-1 z-10 rounded-xl p-2 text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
             title="View transaction details"
           >
             <List className="w-4 h-4" />
@@ -372,7 +382,7 @@ export function Chart({
               chartType === 'line' ? 'transform -translate-x-full' : 'transform translate-x-0'
             }`}
           >
-            <div className="relative mx-auto h-40 w-40 max-w-full overflow-hidden rounded-lg">
+            <div className="relative mx-auto h-40 w-40 max-w-full overflow-hidden rounded-full drop-shadow-[0_10px_18px_rgba(15,23,42,0.08)]">
               <ResponsiveContainer width="100%" height="100%">
                 <RechartsPieChart>
                   <Pie
@@ -394,6 +404,17 @@ export function Chart({
                   </Pie>
                 </RechartsPieChart>
               </ResponsiveContainer>
+
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div className="flex h-[92px] w-[92px] flex-col items-center justify-center rounded-full border border-white/80 bg-white/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-sm">
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                    {mode === 'expense' ? 'Keluar' : 'Masuk'}
+                  </span>
+                  <span className="mt-0.5 text-xs font-bold tracking-tight text-slate-800 tabular-nums">
+                    Rp {formatCompactCurrency(mode === 'expense' ? totalExpenses : totalIncome)}
+                  </span>
+                </div>
+              </div>
 
               {/* Invisible trigger for popover positioning */}
               <div className="absolute opacity-0 pointer-events-none" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
@@ -508,25 +529,25 @@ export function Chart({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mt-2 text-sm">
+      <div className="mt-1 grid grid-cols-2 gap-2.5 text-sm">
         <span
-          className={`flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl transition-all duration-200 tabular-nums ${mode === 'expense'
-            ? 'bg-rose-50 text-rose-700 font-bold ring-1 ring-rose-200'
-            : 'bg-gray-50 text-rose-500 ring-1 ring-gray-100'
+          className={`flex items-center justify-center gap-1.5 rounded-[15px] px-2 py-2.5 transition-all duration-200 tabular-nums ${mode === 'expense'
+            ? 'bg-rose-50 text-rose-700 font-bold ring-1 ring-inset ring-rose-200/80'
+            : 'bg-slate-50/80 text-rose-500 ring-1 ring-inset ring-slate-200/70'
             }`}>
           <Minus className="w-4 h-4" />
           {totalExpenses.toLocaleString('id-ID')}
         </span>
         <span
-          className={`flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl transition-all duration-200 tabular-nums ${mode === 'income'
-            ? 'bg-emerald-50 text-emerald-700 font-bold ring-1 ring-emerald-200'
-            : 'bg-gray-50 text-emerald-600 ring-1 ring-gray-100'
+          className={`flex items-center justify-center gap-1.5 rounded-[15px] px-2 py-2.5 transition-all duration-200 tabular-nums ${mode === 'income'
+            ? 'bg-emerald-50 text-emerald-700 font-bold ring-1 ring-inset ring-emerald-200/80'
+            : 'bg-slate-50/80 text-emerald-600 ring-1 ring-inset ring-slate-200/70'
             }`}>
           <Plus className="w-4 h-4" />
           {totalIncome.toLocaleString('id-ID')}
         </span>
 
       </div>
-    </div>
+    </section>
   )
 }

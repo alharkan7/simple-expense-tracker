@@ -34,27 +34,27 @@ export function UserMenu({ isDemoMode = false, onOpenBudget, onOpenSettings }: U
     return (
       <div className="flex items-center gap-3">
         {/* Display user name */}
-        <span className="text-white text-sm font-medium hidden sm:block">
+        <span className="hidden text-sm font-medium text-white/80 sm:block">
           Welcome, {user?.name?.split(' ')[0] || 'User'}
         </span>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="p-0 w-10 h-10 rounded-full">
+            <Button variant="outline" className="ios-press h-11 w-11 rounded-full border-2 border-white/70 bg-white/10 p-0 shadow-[0_8px_24px_rgba(0,0,0,0.18),0_0_0_1px_rgba(255,255,255,0.12)] backdrop-blur-xl hover:bg-white/15">
               {user?.image ? (
                 <img
                   src={user.image}
                   alt={user.name || "User"}
-                  className="w-full h-full rounded-full object-cover"
+                  className="h-full w-full rounded-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white">
                   {(user?.name?.charAt(0) || user?.email?.charAt(0) || 'U').toUpperCase()}
                 </div>
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64 z-[9999] bg-white border border-gray-200 shadow-lg rounded-2xl">
+          <DropdownMenuContent align="end" className="z-[9999] w-64 rounded-[20px] border border-white/80 bg-white/95 p-1.5 shadow-[0_20px_60px_rgba(15,23,42,0.18)] backdrop-blur-2xl">
             {/* User info in dropdown */}
             <div className="px-3 py-2 text-sm border-b border-border">
               <div className="font-medium">{user?.name || 'User'}</div>
