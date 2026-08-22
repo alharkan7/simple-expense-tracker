@@ -167,8 +167,3 @@
     transition-duration: 0.01ms !important;
   }
 }
-
-.finance-dashboard-stack {
-  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
