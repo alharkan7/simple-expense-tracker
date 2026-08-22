@@ -48,24 +48,34 @@ export default function RootLayout({
                 );
               }
 
-              function setVH(force) {
+              function getVisibleViewportHeight() {
+                return window.visualViewport
+                  ? window.visualViewport.height
+                  : window.innerHeight;
+              }
+
+              function setAppHeight(force) {
                 // On mobile, opening the software keyboard fires a resize event.
                 // Keep the app shell at its original height so the chart and footer
                 // are not compressed into the visible area above the keyboard.
                 if (!force && isFormControlFocused()) return;
 
-                const vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty('--vh', vh + 'px');
+                const visibleHeight = Math.round(getVisibleViewportHeight());
+                document.documentElement.style.setProperty('--app-height', visibleHeight + 'px');
               }
 
-              setVH(true);
-              window.addEventListener('resize', function () { setVH(false); });
+              setAppHeight(true);
+              window.addEventListener('resize', function () { setAppHeight(false); });
+              if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', function () { setAppHeight(false); });
+                window.visualViewport.addEventListener('scroll', function () { setAppHeight(false); });
+              }
               window.addEventListener('orientationchange', function () {
-                window.setTimeout(function () { setVH(true); }, 250);
+                window.setTimeout(function () { setAppHeight(true); }, 250);
               });
               document.addEventListener('focusout', function () {
                 window.setTimeout(function () {
-                  if (!isFormControlFocused()) setVH(true);
+                  if (!isFormControlFocused()) setAppHeight(true);
                 }, 250);
               });
             `,
@@ -73,10 +83,10 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full max-w-full`}
+        className={`${geistSans.variable} ${geistMono.variable} h-full w-full max-w-full overflow-hidden antialiased`}
       >
         <Providers>
-          <div className="w-full max-w-full overflow-x-hidden">
+          <div className="h-[var(--app-height,100dvh)] w-full max-w-full overflow-hidden">
             {children}
           </div>
         </Providers>

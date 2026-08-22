@@ -900,7 +900,7 @@ export default function MobileFinanceTracker() {
   }
 
   return (
-    <div className="relative w-full overflow-hidden bg-[#081126]" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+    <div className="relative h-[var(--app-height,100dvh)] w-full overflow-hidden bg-[#081126]">
       {/* Hero background - matches login screen */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_8%,rgba(75,112,255,0.28),transparent_30%),linear-gradient(160deg,#071024_0%,#0b1a3c_48%,#102d68_100%)]"></div>
@@ -921,7 +921,7 @@ export default function MobileFinanceTracker() {
       {/* Centered content */}
       <div className="relative z-10 h-full w-full flex flex-col">
         {/* Header */}
-        <div className="flex w-full max-w-sm flex-shrink-0 items-start justify-between px-5 pb-4 pt-[max(0.875rem,env(safe-area-inset-top))] mx-auto">
+        <div className="finance-shell-header mx-auto flex w-full max-w-sm flex-shrink-0 items-start justify-between px-5 pb-4 pt-[max(0.875rem,env(safe-area-inset-top))]">
           <div className="flex items-center gap-2">
             <div className="relative">
               <button
@@ -992,7 +992,7 @@ export default function MobileFinanceTracker() {
               showTransactionTable ? 'transform -translate-x-full' : 'transform translate-x-0'
             }`}
           >
-            <div className="ios-scrollbar animate-surface-enter flex h-full w-full flex-col items-center justify-evenly overflow-y-auto pb-3">
+            <div className="finance-main-scroll ios-scrollbar animate-surface-enter flex h-full w-full flex-col items-center justify-evenly overflow-y-auto pb-3">
               <Chart
                 data={chartData}
                 totalIncome={totalIncome}
@@ -1076,7 +1076,7 @@ export default function MobileFinanceTracker() {
       </Drawer>
 
         {/* Footer */}
-        <div className="flex-shrink-0 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-0.5 text-center leading-4">
+        <div className="finance-footer flex-shrink-0 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-0.5 text-center leading-4">
           <span className="text-[10px] text-white/50">
             © {new Date().getFullYear()} |
           </span>

@@ -289,7 +289,7 @@ export function Chart({
   }
 
   return (
-    <section className="ios-card w-full max-w-sm flex-shrink-0 space-y-3 rounded-[28px] p-4 text-center">
+    <section className="finance-chart-card ios-card w-full max-w-sm flex-shrink-0 space-y-3 rounded-[28px] p-4 text-center">
       <div>
         <div className="ios-control mb-3 inline-flex items-center gap-1 rounded-full p-1">
           <button
@@ -342,7 +342,7 @@ export function Chart({
       </div>
 
       {/* Chart Container with Animation - responsive for mobile */}
-      <div className="relative mx-auto h-[168px] w-full max-w-full flex-shrink-0 overflow-hidden rounded-[22px] bg-[radial-gradient(circle_at_center,rgba(239,246,255,0.9),rgba(248,250,252,0.35)_48%,transparent_72%)] p-1">
+      <div className="finance-chart-visual relative mx-auto h-[168px] w-full max-w-full flex-shrink-0 overflow-hidden rounded-[22px] bg-[radial-gradient(circle_at_center,rgba(239,246,255,0.9),rgba(248,250,252,0.35)_48%,transparent_72%)] p-1">
         {/* Chart Type Navigation */}
         {chartType === 'line' && (
           <button
@@ -382,7 +382,7 @@ export function Chart({
               chartType === 'line' ? 'transform -translate-x-full' : 'transform translate-x-0'
             }`}
           >
-            <div className="relative mx-auto h-40 w-40 max-w-full overflow-hidden rounded-full drop-shadow-[0_10px_18px_rgba(15,23,42,0.08)]">
+            <div className="finance-chart-donut relative mx-auto h-40 w-40 max-w-full overflow-hidden rounded-full drop-shadow-[0_10px_18px_rgba(15,23,42,0.08)]">
               <ResponsiveContainer width="100%" height="100%">
                 <RechartsPieChart>
                   <Pie

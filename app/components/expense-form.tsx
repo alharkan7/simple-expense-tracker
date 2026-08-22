@@ -306,7 +306,7 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
   }
 
   return (
-    <section className="ios-card mt-3 flex w-full max-w-sm flex-shrink-0 flex-col space-y-3 rounded-[28px] p-4">
+    <section className="finance-form-card ios-card mt-3 flex w-full max-w-sm flex-shrink-0 flex-col space-y-3 rounded-[28px] p-4">
       {/* Category Segmented Control */}
       <div className="flex w-full gap-1 rounded-[16px] bg-slate-100/90 p-1 ring-1 ring-inset ring-slate-200/60">
         <button
@@ -344,7 +344,7 @@ export function ExpenseForm({ onSubmit, loading, onCategorySwitch, isDemoMode = 
       </div>
 
       {/* Input Form */}
-      <div className="w-full space-y-3">
+      <div className="finance-form-fields w-full space-y-3">
         {/* Amount Input */}
         <div className="w-full space-y-3">
           <div className="w-full">
